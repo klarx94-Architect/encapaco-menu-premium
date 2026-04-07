@@ -90,7 +90,7 @@ export default function InteractiveMenu({ onReserve }) {
                      <h3 className="text-2xl md:text-3xl font-serif font-black text-neutral-dark leading-tight">{dish.name}</h3>
                      <span className="text-xl md:text-2xl font-serif italic text-sierra-gold font-bold shrink-0">{dish.price}€</span>
                   </div>
-                  <p className="text-sm font-serif italic text-neutral-dark/50 leading-relaxed line-clamp-3 md:line-clamp-none">
+                  <p className="text-base font-serif italic text-black leading-relaxed line-clamp-3 md:line-clamp-none">
                     {dish.desc}
                   </p>
                </div>

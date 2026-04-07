@@ -7,6 +7,7 @@ import ScrollToTop from './components/layout/ScrollToTop';
 import Home from './pages/Home';
 import Nosotros from './pages/Nosotros';
 import Playlist from './pages/Playlist';
+import AdminPaco from './pages/AdminPaco';
 
 import { LanguageProvider } from './context/LanguageContext';
 
@@ -27,6 +28,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/nosotros" element={<Nosotros />} />
               <Route path="/playlist" element={<Playlist />} />
+              <Route path="/admin-paco" element={<AdminPaco />} />
             </Routes>
           </main>
 
