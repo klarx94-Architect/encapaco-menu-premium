@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <title>Encapaco_Propuesta_Final_v7</title>
+    <style>
+        @page { size: A4; margin: 0; }
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; background: #FAF8F4; font-family: 'Inter', sans-serif; color: #1A1A1A; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .page { width: 210mm; height: 297mm; max-height: 297mm; position: relative; background-color: #FAF8F4; overflow: hidden; display: flex; flex-direction: column; page-break-after: always; padding: 4rem; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .gold-accent { color: #C9A84C; }
+        .bg-gold { background-color: #C9A84C; }
+        .border-gold { border-color: #C9A84C; }
+        
+        .qr-card { 
+            background: white; 
+            padding: 3rem; 
+            border-radius: 3.5rem; 
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.08); 
+            border: 1px solid rgba(201, 168, 76, 0.1); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            width: fit-content; 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        
+        .roadmap-card { background: white; border-radius: 1.25rem; padding: 1.5rem; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 10px 30px rgba(0,0,0,0.02); height: 100%; display: flex; flex-direction: column; }
+        .step-bubble { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; background: #C9A84C; color: white; margin-bottom: 1rem; }
+        .check-box { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 900; }
+        .check-box.checked { background: #10B981; color: white; font-size: 12px; }
+        .check-box.empty { border: 2px solid #C9A84C; }
+        .price-highlight { background: #F4EFE2; border: 3px solid #C9A84C; border-radius: 2.5rem; padding: 3rem 2rem; text-align: center; box-shadow: 0 30px 60px -15px rgba(201, 168, 76, 0.1); }
+        .arch-accent { position: absolute; opacity: 0.03; font-size: 16rem; font-weight: 900; user-select: none; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <!-- PÁGINA 1: PORTADA IMPACTO -->
+    <div class="page flex items-center justify-between text-center">
+        <div class="arch-accent serif -top-20 -left-16 rotate-[-15deg]">ENCAPACO</div>
+        <div class="mt-20">
+            <div class="w-12 h-1.5 bg-gold mx-auto mb-10 rounded-full"></div>
+            <h1 class="serif text-8xl font-black tracking-tighter uppercase mb-4 leading-none text-[#1A1A1A]">ENCAPACO</h1>
+            <p class="text-[14px] font-black uppercase tracking-[0.8em] gold-accent">Senior Experience 2026</p>
+        </div>
+        <div class="flex flex-col items-center space-y-10">
+            <h2 class="serif italic text-6xl font-black tracking-tight leading-tight">Escanea para <br> ver tu <span class="gold-accent">nueva web</span></h2>
+            <div class="qr-card">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://encapaco-simple-menu.vercel.app" alt="QR" class="w-[260px] h-[260px] block">
+                <p class="mt-8 text-[11px] font-bold uppercase tracking-widest text-neutral-400 italic text-center">Versión de trabajo · Sujeta a ajustes acordados</p>
+            </div>
+        </div>
+        <div class="w-full flex justify-between items-end pt-10 border-t border-black/[0.03] text-[10px] font-black uppercase tracking-widest opacity-40 text-left">
+            <span>Desarrollado por Architect Sys · Granada</span>
+            <span class="gold-accent">Ultimate Master v7.0</span>
+        </div>
+    </div>
+
+    <!-- PÁGINA 2: ROADMAP VISUAL -->
+    <div class="page">
+        <div class="arch-accent serif -bottom-24 -right-24 rotate-[15deg] opacity-[0.02]">PLAN</div>
+        <div class="mb-14">
+            <h2 class="serif text-5xl font-black tracking-tighter uppercase leading-none mb-3">Plan de trabajo <span class="gold-accent">· Encapaco</span></h2>
+            <p class="serif italic text-2xl text-neutral-400">De donde estamos a donde estaremos en 3–5 días</p>
+        </div>
+        <div class="flex-grow space-y-12 py-4 relative z-10">
+            <div class="space-y-8">
+                <h3 class="text-[11px] font-black uppercase tracking-[0.5em] gold-accent">✅ ESTADO ACTUAL (HOY)</h3>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-6"><div class="check-box checked">✓</div><p class="text-xl font-bold">Web funcional desplegada y lista para revisar</p></div>
+                    <div class="flex items-center gap-6"><div class="check-box checked">✓</div><p class="text-xl font-bold">Carta digital completa con todas las secciones</p></div>
+                    <div class="flex items-center gap-6"><div class="check-box checked">✓</div><p class="text-xl font-bold">Botón de llamada directa con tu número</p></div>
+                    <div class="flex items-center gap-6"><div class="check-box checked">✓</div><p class="text-xl font-bold">Enlace a Google Maps integrado</p></div>
+                    <div class="flex items-center gap-6"><div class="check-box checked">✓</div><p class="text-xl font-bold">Código QR generado y listo</p></div>
+                </div>
+            </div>
+            <div class="space-y-8 pt-8 border-t border-black/[0.03]">
+                <h3 class="text-[11px] font-black uppercase tracking-[0.5em] opacity-30">🔲 PENDIENTE (ACORDAR HOY)</h3>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-6"><div class="check-box empty"></div><p class="text-lg italic font-medium opacity-80 leading-snug">Ajustes de contenido que el cliente indique (precios, platos, secciones)</p></div>
+                    <div class="flex items-center gap-6"><div class="check-box empty"></div><p class="text-lg italic font-medium opacity-80 leading-snug">Elección y compra del dominio propio (~10 € por 1 año)</p></div>
+                    <div class="flex items-center gap-6"><div class="check-box empty"></div><p class="text-lg italic font-medium opacity-80 leading-snug">Impresión de 12 etiquetas QR para las mesas del bar</p></div>
+                    <div class="flex items-center gap-6"><div class="check-box empty"></div><p class="text-lg italic font-medium opacity-80 leading-snug">Actualización de la ficha de Google con el dominio propio</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-auto py-8 border-t border-black/[0.03] text-[10px] font-black uppercase tracking-widest text-neutral-300">
+            <span>Architect Sys · Diseño web para hostelería · Granada</span>
+        </div>
+    </div>
+
+    <!-- PÁGINA 3: PROCESO Y CIERRE DEFINITIVO (FULL TEXT) -->
+    <div class="page">
+        <div class="mb-10 text-center">
+            <h2 class="serif text-4xl font-black tracking-tighter uppercase mb-2 leading-none">Proceso de <span class="gold-accent">Contratación</span></h2>
+            <div class="w-12 h-1 bg-gold mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-8 mb-12">
+            <div class="roadmap-card">
+                <div class="step-bubble">1</div>
+                <h4 class="text-[12px] font-black uppercase tracking-widest gold-accent mb-2 italic">Acuerdo hoy</h4>
+                <p class="text-[13px] font-semibold leading-relaxed text-neutral-500">Confirmamos los ajustes y parámetros exactos de la web.</p>
+            </div>
+            <div class="roadmap-card">
+                <div class="step-bubble">2</div>
+                <h4 class="text-[12px] font-black uppercase tracking-widest gold-accent mb-2 italic">Contrato + 50% inicial</h4>
+                <p class="text-[13px] font-semibold leading-relaxed text-neutral-500">Se envía un pequeño contrato/factura con todos los detalles. Al firmarlo y abonar el 50% (75 €), comenzamos la entrega definitiva.</p>
+            </div>
+            <div class="roadmap-card">
+                <div class="step-bubble">3</div>
+                <h4 class="text-[12px] font-black uppercase tracking-widest gold-accent mb-2 italic">Entrega en 3–5 días</h4>
+                <p class="text-[13px] font-semibold leading-relaxed text-neutral-500">Web publicada con dominio propio, QR impresos y ficha de Google actualizada.</p>
+            </div>
+            <div class="roadmap-card">
+                <div class="step-bubble">4</div>
+                <h4 class="text-[12px] font-black uppercase tracking-widest gold-accent mb-2 italic">Pago final del 50%</h4>
+                <p class="text-[13px] font-semibold leading-relaxed text-neutral-500">Al recibir la entrega completa y dar el visto bueno, se abona el 50% restante (75 €).</p>
+            </div>
+        </div>
+
+        <div class="flex-grow flex items-center justify-center -mt-4">
+            <div class="price-highlight w-full max-w-xl">
+                <span class="text-[10px] font-black uppercase tracking-[0.8em] gold-accent mb-8 block">Inversión y Condiciones</span>
+                <div class="space-y-4">
+                    <h4 class="serif text-5xl font-black tracking-tight leading-none mb-6">PRECIO ÚNICO: 150 €</h4>
+                    <p class="text-[13px] font-bold uppercase tracking-widest text-neutral-500 leading-relaxed px-4">
+                        (Dominio incluido + 12 QR impresos + actualización ficha Google)
+                    </p>
+                </div>
+                <div class="mt-10 pt-8 border-t border-gold/10 italic text-[11px] font-black uppercase tracking-[0.5em] text-neutral-900 opacity-25">
+                    Sin pagos mensuales · Sin permanencias · Sin sorpresas.
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-auto text-center py-10 opacity-30 border-t border-transparent">
+             <p class="serif italic text-[11px] mb-3">Architect Sys · Solución web integral para hostelería · Granada</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pearl-white: #FDFCFB;
+  --color-terracotta-deep: #4D2610;
+  --color-terracotta-mid: #8B4513;
+  --color-sierra-gold: #C5A059;
+  --color-neutral-dark: #121212;
+  
+  --font-serif: "Fraunces", serif;
+  --font-sans: "Outfit", sans-serif;
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  src: url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap');
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+}
+
+body {
+  @apply bg-pearl-white text-neutral-dark font-sans leading-relaxed selection:bg-terracotta-deep selection:text-white;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  @apply tracking-tighter;
+}
+
+/* Senior Level Utility Classes */
+.fluid-text-hero {
+  font-size: clamp(3rem, 15vw, 12rem);
+  line-height: 0.85;
+}
+
+.asymmetric-shadow {
+  box-shadow: 20px 20px 60px rgba(0,0,0,0.05), -20px -20px 60px rgba(255,255,255,0.8);
+}
+
+.ceramic-gradient {
+  background: linear-gradient(135deg, #FDFCFB 0%, #F5F1EE 100%);
+}
+
+.clay-border {
+  border: 1px solid rgba(77, 38, 16, 0.1);
+}
+
+@utility scrollbar-hide {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+  &::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
+
+@utility mask-fade-right {
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}
