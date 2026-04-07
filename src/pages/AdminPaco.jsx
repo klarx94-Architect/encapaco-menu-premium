@@ -7,6 +7,8 @@ export default function AdminPaco() {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
+    if (!supabase) return;
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
@@ -19,6 +21,37 @@ export default function AdminPaco() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  if (!supabase) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center p-6 text-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-xl w-full p-12 rounded-[3.5rem] bg-pearl-white border border-black/5 shadow-2xl relative overflow-hidden"
+        >
+          {/* Decorative background element */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-terracotta-mid/30 to-transparent" />
+          
+          <div className="w-24 h-24 bg-terracotta-mid/10 rounded-full flex items-center justify-center mx-auto mb-10 shadow-inner">
+            <Package size={40} className="text-terracotta-mid" />
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-serif font-black text-neutral-dark mb-6 leading-tight">Mini-App <br/>en Aislamiento</h1>
+          <p className="text-neutral-dark/60 mb-10 font-serif italic text-lg leading-relaxed max-w-md mx-auto">
+            "Para proteger la integridad de la Web de Menú, el Director ha aislado el panel de gestión hasta que las credenciales de Supabase sean inyectadas."
+          </p>
+          
+          <div className="bg-white/50 backdrop-blur-sm p-6 rounded-3xl border border-black/5 text-[10px] font-mono text-neutral-dark/30 uppercase tracking-[0.3em] inline-block mb-8">
+            STATUS: PROTECTED_ISO_MODE <br />
+            INFRA: SUPABASE_UNCONFIGURED
+          </div>
+          
+          <p className="text-[10px] uppercase tracking-widest font-black text-sierra-gold">Protocolo Senior Gastro v1.0</p>
+        </motion.div>
+      </div>
+    );
+  }
 
   if (!session) {
     return (
