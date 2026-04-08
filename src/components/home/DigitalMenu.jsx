@@ -16,7 +16,8 @@ const MENU_DATA = {
       { name: 'Lomo completo', price: '6,00€', desc: 'Tomate, lechuga, queso, cebolla y huevo' },
       { name: 'Atún', price: '5,00€', desc: 'Con tomate y lechuga' },
       { name: 'Queso curado', price: '5,00€' },
-      { name: 'Salchichón o chorizo', price: '4,50€', desc: 'Ibéricos' },
+      { name: 'Salchichón', price: '4,50€', desc: 'Ibéricos' },
+      { name: 'Chorizo',    price: '4,50€', desc: 'Ibéricos' },
       { name: 'Morcilla', price: '4,50€' },
       { name: 'Longaniza', price: '4,50€' },
       { name: 'Tortilla con jamón-mahonesa', price: '5,00€' },
@@ -38,11 +39,11 @@ const MENU_DATA = {
   'Pizzas': {
     image: '/assets/menu_new/pizzas.jpg',
     items: [
-      { name: 'Margarita', price: '10,00€', desc: 'Tomate, mozzarella, Gouda y orégano' },
-      { name: 'Jamón y queso', price: '11,00€', desc: 'Tomate, mozzarella, Gouda, jamón cocido y orégano' },
+      { name: 'Margarita', price: '10,00€', desc: 'Tomate, mozzarella y orégano' },
+      { name: 'Jamón y queso', price: '11,00€', desc: 'Tomate, mozzarella, jamón cocido y orégano' },
       { name: '5 quesos', price: '11,00€', desc: 'Masa fina, tomate, mozzarella, Gouda, emmental, semicurado, queso azul y orégano' },
-      { name: 'Verduras y queso de cabra', price: '13,00€', desc: 'Calabacín, berenjena, espinacas, queso de cabra, cherry y orégano' },
-      { name: 'Barbacoa', price: '13,00€', desc: 'Salsa barbacoa, carne, pollo, bacon, cebolla y orégano' },
+      { name: 'Verduras y queso de cabra', price: '13,00€', desc: 'Espinacas, queso de cabra, cherry y orégano' },
+      { name: 'Barbacoa', price: '13,00€', desc: 'Salsa barbacoa, carne, bacon, cebolla y orégano' },
       { name: '4 estaciones', price: '13,00€', desc: 'Jamón cocido, atún, champiñones, cebolla, alcachofa, aceitunas y orégano' },
     ]
   },
