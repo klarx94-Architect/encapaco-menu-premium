@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+﻿import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Phone, Calendar, ShoppingBag, Plus, Minus, Check } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -17,6 +17,8 @@ const MENU_ITEMS = [
   { id: 8, cat: 'Bocadillos', name: 'Tortilla francesa', price: 4.50, desc: 'A elegir: jamón, queso, atún.' },
   { id: 9, cat: 'Bocadillos', name: 'Atún y pimientos', price: 4.00, desc: '' },
   { id: 10, cat: 'Bocadillos', name: 'Lomo curado y tomate', price: 4.00, desc: '' },
+  { id: 41, cat: 'Bocadillos', name: 'Salchichon', price: 4.50, desc: 'Embutido iberico curado.' },
+  { id: 42, cat: 'Bocadillos', name: 'Chorizo', price: 4.50, desc: 'Embutido iberico curado.' },
 
   // Sandwiches
   { id: 11, cat: 'Sandwiches', name: 'Mixto', price: 3.00, desc: 'Jamón york y queso.' },
@@ -109,7 +111,6 @@ const CategoryCard = ({ category, items, index, cart, updateCart }) => {
                   
                   {/* Permanent Add to Cart Inline */}
                   <div className="flex items-center gap-2 bg-white rounded-full p-1 border border-black/10 shrink-0 shadow-sm w-full sm:w-auto justify-between sm:justify-center">
-                     <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-dark/40 pl-3 sm:hidden">Cantidad</span>
                      <div className="flex items-center gap-2">
                        <button onClick={() => updateCart(item.id, -1)} disabled={!cart[item.id]} className="w-8 h-8 rounded-full bg-black/5 text-[#4A3B2C] flex items-center justify-center disabled:opacity-30 hover:bg-black/10 transition-colors">
                          <Minus size={14} />
