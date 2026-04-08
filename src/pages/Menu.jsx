@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Phone, Calendar, ShoppingBag, Plus, Minus, Check } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -17,8 +17,8 @@ const MENU_ITEMS = [
   { id: 8, cat: 'Bocadillos', name: 'Tortilla francesa', price: 4.50, desc: 'A elegir: jamón, queso, atún.' },
   { id: 9, cat: 'Bocadillos', name: 'Atún y pimientos', price: 4.00, desc: '' },
   { id: 10, cat: 'Bocadillos', name: 'Lomo curado y tomate', price: 4.00, desc: '' },
-  { id: 41, cat: 'Bocadillos', name: 'Salchichon', price: 4.50, desc: 'Embutido iberico curado.' },
-  { id: 42, cat: 'Bocadillos', name: 'Chorizo', price: 4.50, desc: 'Embutido iberico curado.' },
+  { id: 41, cat: 'Bocadillos', name: 'Salchichón', price: 4.50, desc: 'Embutido ibérico curado.' },
+  { id: 42, cat: 'Bocadillos', name: 'Chorizo', price: 4.50, desc: 'Embutido ibérico curado.' },
 
   // Sandwiches
   { id: 11, cat: 'Sandwiches', name: 'Mixto', price: 3.00, desc: 'Jamón york y queso.' },
@@ -30,7 +30,7 @@ const MENU_ITEMS = [
   { id: 15, cat: 'Pizzas', name: 'Margarita', price: 7.00, desc: 'Tomate, mozzarella y orégano.' },
   { id: 16, cat: 'Pizzas', name: 'Jamón York', price: 8.00, desc: 'Tomate, mozzarella, jamón york y orégano.' },
   { id: 17, cat: 'Pizzas', name: 'Bacon', price: 8.00, desc: 'Tomate, mozzarella, bacon y orégano.' },
-  { id: 18, cat: 'Pizzas', name: '4 Quesos', price: 9.00, desc: 'Tomate, mozzarella, emmental, gouda, roquefort.' },
+  { id: 18, cat: 'Pizzas', name: '4 Quesos', price: 9.00, desc: 'Tomate, mozzarella, emmental, roquefort.' },
   { id: 19, cat: 'Pizzas', name: 'Barbacoa', price: 9.00, desc: 'Salsa barbacoa, carne, bacon, cebolla y orégano.' },
   { id: 20, cat: 'Pizzas', name: 'Carbonara', price: 9.50, desc: 'Nata, bacon, champiñones, cebolla.' },
   { id: 21, cat: 'Pizzas', name: 'ENCAPACO', price: 10.00, desc: 'Jamón york, bacon, roquefort, atún, pimiento, champiñón.' },
