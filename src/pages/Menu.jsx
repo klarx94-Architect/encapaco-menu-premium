@@ -20,7 +20,7 @@ const MENU_ITEMS = [
 
   // Sandwiches
   { id: 11, cat: 'Sandwiches', name: 'Mixto', price: 3.00, desc: 'Jamón york y queso.' },
-  { id: 12, cat: 'Sandwiches', name: 'Vegetal', price: 4.50, desc: 'Lechuga, tomate, huevo, espárragos, atún, mahonesa.' },
+  { id: 12, cat: 'Sandwiches', name: 'Vegetal', price: 4.50, desc: 'Espinacas, queso de cabra, cherry y orégano.' },
   { id: 13, cat: 'Sandwiches', name: 'Pollo', price: 4.50, desc: 'Pechuga, lechuga, tomate, huevo y mahonesa.' },
   { id: 14, cat: 'Sandwiches', name: 'Atún', price: 3.50, desc: 'Atún, pimientos y lechuga.' },
 
@@ -29,7 +29,7 @@ const MENU_ITEMS = [
   { id: 16, cat: 'Pizzas', name: 'Jamón York', price: 8.00, desc: 'Tomate, mozzarella, jamón york y orégano.' },
   { id: 17, cat: 'Pizzas', name: 'Bacon', price: 8.00, desc: 'Tomate, mozzarella, bacon y orégano.' },
   { id: 18, cat: 'Pizzas', name: '4 Quesos', price: 9.00, desc: 'Tomate, mozzarella, emmental, gouda, roquefort.' },
-  { id: 19, cat: 'Pizzas', name: 'Barbacoa', price: 9.00, desc: 'Carne picada, salsa barbacoa y orégano.' },
+  { id: 19, cat: 'Pizzas', name: 'Barbacoa', price: 9.00, desc: 'Salsa barbacoa, carne, bacon, cebolla y orégano.' },
   { id: 20, cat: 'Pizzas', name: 'Carbonara', price: 9.50, desc: 'Nata, bacon, champiñones, cebolla.' },
   { id: 21, cat: 'Pizzas', name: 'ENCAPACO', price: 10.00, desc: 'Jamón york, bacon, roquefort, atún, pimiento, champiñón.' },
 
@@ -101,7 +101,7 @@ const CategoryCard = ({ category, items, index, cart, updateCart }) => {
                        <span className="text-sm font-black text-sierra-gold">{item.price.toFixed(2)}€</span>
                      </div>
                      {item.desc && (
-                        <p className="text-sm text-black font-medium mt-1 leading-relaxed">
+                        <p className="text-sm text-black font-medium mt-1 leading-relaxed italic opacity-90">
                           {item.desc}
                         </p>
                      )}
