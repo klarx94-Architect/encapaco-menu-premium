@@ -88,10 +88,42 @@ const TE_DATA = [
 ];
 
 export default function DigitalMenu() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isTeOpen, setIsTeOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    async function getMenu() {
+      try {
+        const res = await fetch('/api/menu');
+        if (!res.ok) throw new Error('API unstable');
+        const data = await res.json();
+        if (data && data.categories) {
+          const normalized = {};
+          data.categories.forEach(cat => {
+            if (cat.visible !== false) {
+              normalized[cat.name_es] = {
+                image: cat.image_url || MENU_DATA[cat.name_es]?.image || '/assets/menu_new/pizzas.jpg',
+                items: cat.items.filter(i => i.visible !== false),
+                isDynamic: true,
+                names: { es: cat.name_es, en: cat.name_en, fr: cat.name_fr }
+              };
+            }
+          });
+          setActiveMenu(normalized);
+        }
+      } catch (err) {
+        console.warn('Falling back to local MENU_DATA:', err);
+        setActiveMenu(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getMenu();
+  }, []);
 
+  const displayData = activeMenu || MENU_DATA;
 
   return (
     <section className="py-20 px-6 lg:px-20 bg-pearl-white min-h-screen">
@@ -155,13 +187,14 @@ export default function DigitalMenu() {
 
         {/* Categories Grid */}
         <div className="space-y-32 md:space-y-40">
-          {Object.entries(MENU_DATA).map(([category, data], idx) => (
-            <div key={category} className="relative group/cat">
-              {/* "Nuclear" Premium Split Header */}
-              <div className="flex flex-col md:flex-row bg-neutral-dark rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.4)] min-h-[300px] md:h-[350px] lg:h-[400px] border border-white/5">
-                 
-                 {/* Text Panel (Left) */}
-                 <div className="w-full md:w-[45%] p-10 md:p-12 lg:p-16 flex flex-col justify-center relative z-20">
+          {Object.entries(displayData).map(([category, data], idx) => {
+            if (category === 'tes') return null;
+            const categoryTitle = data.isDynamic ? data.names[language] : t(`menu.categories.${category}`);
+            
+            return (
+              <div key={category} className="relative group/cat">
+                <div className="flex flex-col md:flex-row bg-neutral-dark rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.4)] min-h-[300px] md:h-[350px] lg:h-[400px] border border-white/5">
+                  <div className="w-full md:w-[45%] p-10 md:p-12 lg:p-16 flex flex-col justify-center relative z-20">
                     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
@@ -171,51 +204,55 @@ export default function DigitalMenu() {
                     >
                       <span className="text-sierra-gold uppercase tracking-[0.5em] text-[10px] font-black mb-4 block">{t('menu.category')}</span>
                       <h3 className="text-4xl md:text-5xl lg:text-6xl font-serif font-black text-white leading-[0.95] mb-8 tracking-tighter">
-                        {t(`menu.categories.${category}`)}
+                        {categoryTitle}
                       </h3>
                       <div className="w-16 h-1.5 bg-terracotta-mid group-hover/cat:w-32 transition-all duration-1000 ease-out shadow-lg" />
                     </motion.div>
-                 </div>
-
-                 {/* Image Panel (Right) */}
-                 <div className="w-full md:w-[55%] h-[250px] md:h-full relative overflow-hidden z-10">
+                  </div>
+                  <div className="w-full md:w-[55%] h-[250px] md:h-full relative overflow-hidden z-10">
                     <img 
                       src={data.image} 
                       alt={category} 
                       className="w-full h-full object-cover transition-transform duration-[2s] group-hover/cat:scale-110"
                     />
                     <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-neutral-dark to-transparent hidden md:block" />
-                 </div>
-              </div>
+                  </div>
+                </div>
 
-              <div className="grid md:grid-cols-2 gap-x-12 gap-y-10 lg:gap-x-20 lg:gap-y-12 px-6 mt-12">
-                {data.items.map((item, i) => (
-                  <motion.div 
-                    key={i}
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.05 }}
-                    className="flex justify-between items-start gap-6 group border-b border-black/[0.03] pb-5"
-                  >
-                    <div className="space-y-2 flex-1">
-                       <h4 className="text-xl md:text-2xl font-bold text-neutral-dark group-hover:text-terracotta-mid transition-colors tracking-tight leading-tight">
-                         {t(`menu.items.${item.name}`)}
-                       </h4>
-                       {item.desc && (
-                         <p className="text-base md:text-lg font-serif italic text-neutral-dark/90 leading-relaxed font-medium">
-                           {t(`menu.items.${item.desc}`)}
-                         </p>
-                       )}
-                    </div>
-                    <span className="text-lg md:text-xl font-black text-sierra-gold shrink-0 bg-sierra-gold/5 px-5 py-1.5 rounded-full border border-sierra-gold/10">
-                      {item.price === 'Consultar' ? t('menu.items.Consultar') : item.price}
-                    </span>
-                  </motion.div>
-                ))}
+                <div className="grid md:grid-cols-2 gap-x-12 gap-y-10 lg:gap-x-20 lg:gap-y-12 px-6 mt-12">
+                  {data.items.map((item, i) => {
+                    const itemName = data.isDynamic ? item[`name_${language}`] : t(`menu.items.${item.name}`);
+                    const itemDesc = data.isDynamic ? item[`description_${language}`] : (item.desc ? t(`menu.items.${item.desc}`) : null);
+                    
+                    return (
+                      <motion.div 
+                        key={i}
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.05 }}
+                        className="flex justify-between items-start gap-6 group border-b border-black/[0.03] pb-5"
+                      >
+                        <div className="space-y-2 flex-1">
+                          <h4 className="text-xl md:text-2xl font-bold text-neutral-dark group-hover:text-terracotta-mid transition-colors tracking-tight leading-tight">
+                            {itemName}
+                          </h4>
+                          {itemDesc && (
+                            <p className="text-base md:text-lg font-serif italic text-neutral-dark/90 leading-relaxed font-medium">
+                              {itemDesc}
+                            </p>
+                          )}
+                        </div>
+                        <span className="text-lg md:text-xl font-black text-sierra-gold shrink-0 bg-sierra-gold/5 px-5 py-1.5 rounded-full border border-sierra-gold/10">
+                          {item.price === 'Consultar' ? t('menu.items.Consultar') : item.price}
+                        </span>
+                      </motion.div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
            <div className="pt-20">
               <motion.button 
@@ -254,12 +291,15 @@ export default function DigitalMenu() {
                     className="overflow-hidden"
                   >
                     <div className="grid md:grid-cols-3 gap-6 py-12">
-                       {TE_DATA.map((item, i) => (
-                         <div key={i} className="flex justify-between items-center p-6 bg-white rounded-2xl border border-black/5 shadow-sm hover:border-sierra-gold/30 transition-all">
-                            <span className="text-sm font-bold text-neutral-dark">{t(`menu.teas_list.${item.name}`)}</span>
-                            <span className="text-sm font-black text-sierra-gold">{item.price}</span>
-                         </div>
-                       ))}
+                       {(displayData['Tés e Infusiones']?.items || displayData['tes']?.items || TE_DATA).map((item, i) => {
+                         const itemName = item[`name_${language}`] || t(`menu.teas_list.${item.name}`);
+                         return (
+                           <div key={i} className="flex justify-between items-center p-6 bg-white rounded-2xl border border-black/5 shadow-sm hover:border-sierra-gold/30 transition-all">
+                              <span className="text-sm font-bold text-neutral-dark">{itemName}</span>
+                              <span className="text-sm font-black text-sierra-gold">{item.price}</span>
+                           </div>
+                         );
+                       })}
                     </div>
                   </motion.div>
                 )}
