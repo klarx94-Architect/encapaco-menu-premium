@@ -8,6 +8,17 @@ import {
 
 const ADMIN_STORAGE_KEY = 'encapaco_admin_auth';
 
+const toBase64 = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    // Quitar el prefijo "data:image/jpeg;base64," — GitHub solo quiere el base64 puro
+    const base64 = reader.result.split(',')[1];
+    resolve(base64);
+  };
+  reader.onerror = reject;
+});
+
 export default function AdminPaco() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
@@ -117,22 +128,30 @@ export default function AdminPaco() {
     if (!file) return;
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('password', password);
-
     try {
+      const base64 = await toBase64(file);
+      const extension = file.name.split('.').pop() || 'jpg';
+      const filename = `${editingItem.id}.${extension}`;
+      
       const res = await fetch('/api/upload', {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password: password, // la contraseña ya en sessionStorage o estado
+          filename,
+          base64,
+        }),
       });
+      
       const data = await res.json();
       if (data.url) {
+        // Actualizar image_url del plato en el estado local
         setEditingItem({ ...editingItem, image_url: data.url });
       } else {
         alert(data.error || 'Error subiendo imagen');
       }
     } catch (err) {
+      console.error('Error subiendo imagen:', err);
       alert('Error de conexión al subir imagen');
     } finally {
       setUploading(false);
@@ -367,8 +386,11 @@ export default function AdminPaco() {
                     </div>
                     
                     {uploading && (
-                      <div className="absolute inset-0 bg-white/80 backdrop-blur-md flex items-center justify-center">
-                         <Loader2 className="animate-spin text-sierra-gold" size={48} />
+                      <div className="absolute inset-0 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center">
+                         <Loader2 className="animate-spin text-sierra-gold mb-4" size={48} />
+                         <p className="text-xs text-neutral-dark/60 font-serif italic">
+                            Subiendo imagen... estará visible en producción en ~30 segundos.
+                         </p>
                       </div>
                     )}
                  </div>
