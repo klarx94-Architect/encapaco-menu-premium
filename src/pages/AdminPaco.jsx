@@ -5,7 +5,7 @@ import {
   Save, Upload, CheckCircle2, ChevronRight, Image as ImageIcon,
   Loader2, AlertCircle, X, Trash2, Plus
 } from 'lucide-react';
-import LanguageSwitcher from '../components/ui/LanguageSwitcher';
+
 
 const ADMIN_STORAGE_KEY = 'encapaco_admin_auth';
 
@@ -163,7 +163,7 @@ export default function AdminPaco() {
   const toggleCategoryVisibility = (catId) => {
     const newData = { ...menuData };
     const cat = newData.categories.find(c => c.id === catId);
-    cat.visible = cat.visible === false;
+    cat.visible = cat.visible !== false;
     setMenuData(newData);
   };
 
@@ -173,7 +173,7 @@ export default function AdminPaco() {
     const newData = { ...menuData };
     const cat = newData.categories.find(c => c.id === catId);
     const item = cat.items.find(i => i.id === itemId);
-    item.visible = item.visible === false;
+    item.visible = item.visible !== false;
     setMenuData(newData);
   };
 

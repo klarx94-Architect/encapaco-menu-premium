@@ -11,7 +11,7 @@ const LegalLayout = ({ title, subtitle, breadcrumb, children }) => {
       className="bg-pearl-white min-h-screen"
     >
       {/* Hero Section */}
-      <section className="bg-neutral-dark text-pearl-white pt-[90px] lg:pt-32 pb-20 px-6 lg:px-20 relative overflow-hidden">
+      <section className="bg-neutral-dark text-pearl-white pt-[90px] lg:pt-[120px] pb-20 px-6 lg:px-20 relative overflow-hidden">
         {/* Background Architectural Text (Subtle) */}
         <div className="absolute -bottom-10 -right-10 opacity-[0.03] pointer-events-none select-none">
            <span className="text-[20vw] font-serif font-black leading-none uppercase">LEGAL</span>
