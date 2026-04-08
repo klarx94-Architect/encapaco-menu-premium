@@ -68,7 +68,7 @@ export const translations = {
         "Completo": "Completo",
         "Tomate, lechuga, cebolla y huevo": "Tomate, lechuga, cebolla y huevo",
         "Vegetal": "Vegetal",
-        "Tortilla con jamón y mayonesa": "Tortilla con jamón y mayonesa",
+        "Espinacas, queso de cabra, cherry y orégano": "Espinacas, queso de cabra, cherry y orégano",
         "Enchilada": "Enchilada",
         "Pincho Moruno": "Pincho Moruno",
         "Pincho Pollo": "Pincho Pollo",

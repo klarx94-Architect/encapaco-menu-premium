@@ -100,7 +100,11 @@ const CategoryCard = ({ category, items, index, cart, updateCart }) => {
                        <h3 className="font-bold text-[#4A3B2C] text-lg leading-tight group-hover:text-terracotta-mid transition-colors">{item.name}</h3>
                        <span className="text-sm font-black text-sierra-gold">{item.price.toFixed(2)}€</span>
                      </div>
-                     {item.desc && <p className="text-xs text-neutral-dark/50 mt-1 leading-relaxed">{item.desc}</p>}
+                     {item.desc && (
+                        <p className="text-sm text-black font-medium mt-1 leading-relaxed">
+                          {item.desc}
+                        </p>
+                     )}
                   </div>
                   
                   {/* Permanent Add to Cart Inline */}
