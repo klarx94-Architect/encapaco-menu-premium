@@ -109,11 +109,8 @@ export default function Navbar() {
             <LanguageSwitcher className="ml-8" />
           </div>
 
-          {/* Mobile Controls (Visible Language Switcher + Toggle) */}
-          <div className="lg:hidden flex items-center gap-6">
-            <div className="bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-black/5">
-              <LanguageSwitcher className="gap-3" />
-            </div>
+          {/* Mobile Controls — solo el toggle */}
+          <div className="lg:hidden flex items-center">
             <button 
               onClick={() => setIsMobileOpen(!isMobileOpen)}
               className="text-neutral-dark p-2 hover:scale-110 transition-transform relative z-[510]"
@@ -123,6 +120,37 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+
+      {/* Barra flotante móvil: iconos de contacto + selector de idioma */}
+      <div className="lg:hidden fixed top-[72px] left-0 w-full z-[290] flex items-center justify-between px-5 py-2 pointer-events-none">
+        
+        {/* Iconos de teléfono y ubicación — izquierda */}
+        <div className="flex items-center gap-3 pointer-events-auto">
+          {/* Icono teléfono */}
+          <a
+            href="tel:+34616600772"
+            aria-label="Llamar a ENCAPACO"
+            className="w-10 h-10 rounded-full bg-white/40 backdrop-blur-md border border-black/10 flex items-center justify-center shadow-sm hover:bg-white/70 transition-all"
+          >
+            <Phone size={16} className="text-neutral-dark/50" strokeWidth={1.5} />
+          </a>
+          {/* Icono ubicación */}
+          <a
+            href="https://www.google.com/maps/dir/?api=1&destination=Plaza+Mayor+2+Guejar+Sierra+Granada"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Ver en Google Maps"
+            className="w-10 h-10 rounded-full bg-white/40 backdrop-blur-md border border-black/10 flex items-center justify-center shadow-sm hover:bg-white/70 transition-all"
+          >
+            <MapPin size={16} className="text-neutral-dark/50" strokeWidth={1.5} />
+          </a>
+        </div>
+
+        {/* Selector de idioma — derecha */}
+        <div className="pointer-events-auto bg-white/40 backdrop-blur-md px-4 py-2 rounded-full border border-black/10 shadow-sm">
+          <LanguageSwitcher className="gap-3" />
+        </div>
+      </div>
 
       {/* Mobile Curtain Menu - Moved outside of <nav> for absolute viewport stability */}
       <AnimatePresence>
