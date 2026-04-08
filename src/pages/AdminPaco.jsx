@@ -28,11 +28,14 @@ export default function AdminPaco() {
   const [saving, setSaving] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
 
   // Auth Check
   useEffect(() => {
     const auth = sessionStorage.getItem(ADMIN_STORAGE_KEY);
-    if (auth === '1') {
+    const savedPw = sessionStorage.getItem('encapaco_admin_pw');
+    if (auth === '1' && savedPw) {
+      setPassword(savedPw);
       setIsAuthenticated(true);
       fetchMenu();
     }
@@ -67,13 +70,14 @@ export default function AdminPaco() {
       if (res.status === 200 || res.status === 204 || (res.status === 400 && !menuData)) {
          // If 200/204, pass is correct. If 400 because data was empty but pass was correct, also fine.
          // Actually, let's just check for 401.
-         if (res.status !== 401) {
+          if (res.status !== 401) {
             sessionStorage.setItem(ADMIN_STORAGE_KEY, '1');
+            sessionStorage.setItem('encapaco_admin_pw', password);
             setIsAuthenticated(true);
             if (!menuData) fetchMenu();
-         } else {
+          } else {
             setAuthError('Contraseña incorrecta. Solo el director de orquesta tiene la llave.');
-         }
+          }
       } else if (res.status === 401) {
         setAuthError('Contraseña incorrecta. Solo el director de orquesta tiene la llave.');
       }
@@ -131,13 +135,13 @@ export default function AdminPaco() {
     try {
       const base64 = await toBase64(file);
       const extension = file.name.split('.').pop() || 'jpg';
-      const filename = `${editingItem.id}.${extension}`;
+      const filename = `${editingItem.id}-${Date.now()}.${extension}`;
       
       const res = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          password: password, // la contraseña ya en sessionStorage o estado
+          password: password, 
           filename,
           base64,
         }),
@@ -145,8 +149,13 @@ export default function AdminPaco() {
       
       const data = await res.json();
       if (data.url) {
-        // Actualizar image_url del plato en el estado local
-        setEditingItem({ ...editingItem, image_url: data.url });
+        const currentImages = editingItem.images || (editingItem.image_url ? [editingItem.image_url] : []);
+        setEditingItem({ 
+          ...editingItem, 
+          images: [...currentImages, data.url],
+          image_url: data.url 
+        });
+        setActiveImg(currentImages.length);
       } else {
         alert(data.error || 'Error subiendo imagen');
       }
@@ -158,11 +167,30 @@ export default function AdminPaco() {
     }
   };
 
+  const handleDeleteImage = (idx) => {
+    const images = editingItem.images || (editingItem.image_url ? [editingItem.image_url] : []);
+    const newImages = images.filter((_, i) => i !== idx);
+    setEditingItem({
+      ...editingItem,
+      images: newImages,
+      image_url: newImages[0] || '',
+    });
+    setActiveImg(Math.max(0, activeImg - 1));
+  };
+
   const updateItemDetails = () => {
     const newData = { ...menuData };
     const cat = newData.categories.find(c => c.id === editingItem.catId);
     const itemIdx = cat.items.findIndex(i => i.id === editingItem.id);
-    cat.items[itemIdx] = { ...editingItem };
+    
+    const finalImages = editingItem.images || (editingItem.image_url ? [editingItem.image_url] : []);
+    const updatedItem = {
+      ...editingItem,
+      images: finalImages,
+      image_url: finalImages[0] || ''
+    };
+    
+    cat.items[itemIdx] = updatedItem;
     setMenuData(newData);
     setEditingItem(null);
   };
@@ -328,7 +356,10 @@ export default function AdminPaco() {
                             {item.visible === false ? <EyeOff size={18} /> : <Eye size={18} />}
                           </button>
                           <button 
-                            onClick={() => setEditingItem({ ...item, catId: category.id })}
+                            onClick={() => {
+                              setEditingItem({ ...item, catId: category.id });
+                              setActiveImg(0);
+                            }}
                             className="p-3 text-sierra-gold hover:bg-sierra-gold/10 rounded-full transition-colors"
                           >
                             <Edit3 size={18} />
@@ -367,34 +398,83 @@ export default function AdminPaco() {
               className="relative w-full max-w-2xl bg-white rounded-[4rem] overflow-hidden shadow-2xl flex flex-col md:flex-row"
             >
               <div className="w-full md:w-1/2 bg-pearl-white p-12 flex flex-col items-center justify-center relative border-b md:border-b-0 md:border-r border-black/5">
-                 <div className="relative w-full aspect-square rounded-[3rem] overflow-hidden bg-white border-8 border-white shadow-xl mb-8 group">
-                    {editingItem.image_url ? (
-                      <img src={editingItem.image_url} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center gap-4 text-neutral-dark/10">
-                         <ImageIcon size={64} />
-                         <span className="text-[10px] font-black uppercase tracking-widest">Sin imagen</span>
-                      </div>
-                    )}
+                 {(() => {
+                    const images = editingItem.images || (editingItem.image_url ? [editingItem.image_url] : []);
                     
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-8">
-                       <label className="cursor-pointer bg-white text-neutral-dark px-8 py-4 rounded-full font-black uppercase tracking-widest text-[10px] flex items-center gap-3">
-                          <Upload size={14} />
-                          {uploading ? 'Subiendo...' : 'Cambiar Imagen'}
-                          <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
-                       </label>
-                    </div>
-                    
-                    {uploading && (
-                      <div className="absolute inset-0 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center">
-                         <Loader2 className="animate-spin text-sierra-gold mb-4" size={48} />
-                         <p className="text-xs text-neutral-dark/60 font-serif italic">
-                            Subiendo imagen... estará visible en producción en ~30 segundos.
-                         </p>
+                    return (
+                      <div className="w-full flex flex-col items-center gap-6">
+                        {/* Imagen principal */}
+                        <div className="relative w-full aspect-square rounded-[3rem] overflow-hidden bg-white border-8 border-white shadow-xl group">
+                          {images.length > 0 ? (
+                            <>
+                              <img 
+                                src={images[activeImg]} 
+                                alt="" 
+                                className="w-full h-full object-cover transition-all duration-300" 
+                              />
+                              <button
+                                onClick={() => handleDeleteImage(activeImg)}
+                                className="absolute top-4 right-4 w-10 h-10 bg-red-500/90 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                                title="Eliminar esta imagen"
+                              >
+                                <X size={16} />
+                              </button>
+                            </>
+                          ) : (
+                            <div className="w-full h-full flex flex-col items-center justify-center gap-4 text-neutral-dark/10">
+                              <ImageIcon size={64} />
+                              <span className="text-[10px] font-black uppercase tracking-widest">Sin imagen</span>
+                            </div>
+                          )}
+
+                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
+                            <label className="cursor-pointer bg-white/90 backdrop-blur-md text-neutral-dark px-6 py-3 rounded-full font-black uppercase tracking-widest text-[10px] flex items-center gap-2 shadow-lg hover:bg-white transition-all whitespace-nowrap">
+                              <Upload size={12} />
+                              {uploading ? 'Subiendo...' : images.length > 0 ? '+ Añadir foto' : 'Subir foto'}
+                              <input 
+                                type="file" 
+                                className="hidden" 
+                                accept="image/*" 
+                                onChange={handleImageUpload} 
+                                disabled={uploading} 
+                              />
+                            </label>
+                          </div>
+
+                          {uploading && (
+                            <div className="absolute inset-0 z-30 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center gap-4">
+                              <Loader2 className="animate-spin text-sierra-gold" size={40} />
+                              <div className="space-y-1">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-dark/40">Guardando en repositorio...</p>
+                                <p className="text-[10px] text-neutral-dark/30 font-serif italic">Visible en web en ~30 seg</p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Miniaturas del carrusel */}
+                        {images.length > 1 && (
+                          <div className="flex gap-2 flex-wrap justify-center">
+                            {images.map((img, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => setActiveImg(idx)}
+                                className={`w-12 h-12 rounded-xl overflow-hidden border-2 transition-all ${
+                                  idx === activeImg ? 'border-sierra-gold scale-110' : 'border-transparent opacity-60 hover:opacity-100'
+                                }`}
+                              >
+                                <img src={img} alt="" className="w-full h-full object-cover" />
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        <p className="text-[10px] font-black uppercase tracking-widest text-neutral-dark/20 text-center">
+                          {images.length} foto{images.length !== 1 ? 's' : ''} · ID: {editingItem.id}
+                        </p>
                       </div>
-                    )}
-                 </div>
-                 <p className="text-[10px] font-black uppercase tracking-widest text-neutral-dark/30">ID: {editingItem.id}</p>
+                    );
+                 })()}
               </div>
 
               <div className="w-full md:w-1/2 p-12 space-y-8">
