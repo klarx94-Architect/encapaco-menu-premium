@@ -42,7 +42,7 @@ const Logo = ({ isScrolled }) => (
       <img 
         src="/assets/bar_tapas/group-4-2814581.png" 
         alt="ENCAPACO Logo" 
-        className="h-16 w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+        className="h-10 sm:h-12 lg:h-16 w-auto object-contain transition-all duration-300 group-hover:scale-105"
       />
     </Link>
   </motion.div>
@@ -72,8 +72,10 @@ export default function Navbar() {
   return (
     <>
       <nav className={cn("fixed top-0 left-0 w-full z-[300] transition-all duration-500", 
-        isScrolled ? "bg-white/90 backdrop-blur-xl py-4 shadow-xl border-b border-black/5" : "bg-transparent py-8")}>
-        <div className="max-w-[1600px] mx-auto px-10 flex items-center justify-between">
+        isScrolled 
+          ? "bg-white/90 backdrop-blur-xl py-3 shadow-xl border-b border-black/5" 
+          : "bg-transparent py-4 lg:py-8")}>
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between">
           <Logo isScrolled={isScrolled} />
 
           {/* Desktop Menu */}
@@ -109,48 +111,48 @@ export default function Navbar() {
             <LanguageSwitcher className="ml-8" />
           </div>
 
-          {/* Mobile Controls — solo el toggle */}
-          <div className="lg:hidden flex items-center">
-            <button 
-              onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className="text-neutral-dark p-2 hover:scale-110 transition-transform relative z-[510]"
-            >
-              {isMobileOpen ? <X size={32} strokeWidth={2.5} /> : <Menu size={32} />}
-            </button>
+          {/* Mobile Controls — 2 filas en móvil */}
+          <div className="lg:hidden flex flex-col items-end gap-1.5">
+            
+            {/* Fila 1: iconos de contacto + hamburger */}
+            <div className="flex items-center gap-3">
+              {/* Botón teléfono */}
+              <a
+                href="tel:+34616600772"
+                aria-label="Llamar a ENCAPACO"
+                className="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md border border-black/10 flex items-center justify-center shadow-sm hover:bg-white/80 transition-all"
+              >
+                <Phone size={14} className="text-neutral-dark/50" strokeWidth={1.5} />
+              </a>
+              {/* Botón ubicación */}
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=Plaza+Mayor+2+Guejar+Sierra+Granada"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Ver en Google Maps"
+                className="w-9 h-9 rounded-full bg-white/50 backdrop-blur-md border border-black/10 flex items-center justify-center shadow-sm hover:bg-white/80 transition-all"
+              >
+                <MapPin size={14} className="text-neutral-dark/50" strokeWidth={1.5} />
+              </a>
+              {/* Separador visual */}
+              <div className="w-px h-5 bg-black/10" />
+              {/* Hamburger */}
+              <button 
+                onClick={() => setIsMobileOpen(!isMobileOpen)}
+                className="text-neutral-dark p-1 hover:scale-110 transition-transform relative z-[510]"
+              >
+                {isMobileOpen ? <X size={28} strokeWidth={2.5} /> : <Menu size={28} />}
+              </button>
+            </div>
+
+            {/* Fila 2: selector de idioma */}
+            <div className="bg-white/40 backdrop-blur-md px-3 py-1 rounded-full border border-black/8 shadow-sm">
+              <LanguageSwitcher className="gap-3" />
+            </div>
+
           </div>
         </div>
       </nav>
-
-      {/* Barra flotante móvil: iconos de contacto + selector de idioma */}
-      <div className="lg:hidden fixed top-[72px] left-0 w-full z-[290] flex items-center justify-between px-5 py-2 pointer-events-none">
-        
-        {/* Iconos de teléfono y ubicación — izquierda */}
-        <div className="flex items-center gap-3 pointer-events-auto">
-          {/* Icono teléfono */}
-          <a
-            href="tel:+34616600772"
-            aria-label="Llamar a ENCAPACO"
-            className="w-10 h-10 rounded-full bg-white/40 backdrop-blur-md border border-black/10 flex items-center justify-center shadow-sm hover:bg-white/70 transition-all"
-          >
-            <Phone size={16} className="text-neutral-dark/50" strokeWidth={1.5} />
-          </a>
-          {/* Icono ubicación */}
-          <a
-            href="https://www.google.com/maps/dir/?api=1&destination=Plaza+Mayor+2+Guejar+Sierra+Granada"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Ver en Google Maps"
-            className="w-10 h-10 rounded-full bg-white/40 backdrop-blur-md border border-black/10 flex items-center justify-center shadow-sm hover:bg-white/70 transition-all"
-          >
-            <MapPin size={16} className="text-neutral-dark/50" strokeWidth={1.5} />
-          </a>
-        </div>
-
-        {/* Selector de idioma — derecha */}
-        <div className="pointer-events-auto bg-white/40 backdrop-blur-md px-4 py-2 rounded-full border border-black/10 shadow-sm">
-          <LanguageSwitcher className="gap-3" />
-        </div>
-      </div>
 
       {/* Mobile Curtain Menu - Moved outside of <nav> for absolute viewport stability */}
       <AnimatePresence>
