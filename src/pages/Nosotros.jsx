@@ -146,8 +146,10 @@ export default function Nosotros() {
               </p>
            </motion.div>
 
-           <Link 
-             to="/playlist"
+           <a 
+             href="https://open.spotify.com/user/encapaco?si=t1PY-0vMRMKJW5ISArIJ7g"
+             target="_blank"
+             rel="noopener noreferrer"
              className="group relative inline-flex items-center gap-6 bg-[#1DB954] text-white px-12 py-6 rounded-full font-black uppercase tracking-[0.3em] text-[10px] hover:bg-[#1ed760] transition-all shadow-[0_20px_50px_rgba(29,185,84,0.3)] no-underline overflow-hidden"
            >
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
@@ -157,7 +159,7 @@ export default function Nosotros() {
                     <Music size={12} className="text-[#1DB954]" />
                  </div>
               </span>
-           </Link>
+           </a>
         </div>
 
         <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-sierra-gold/5 rounded-full blur-3xl pointer-events-none" />

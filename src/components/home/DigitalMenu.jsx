@@ -20,7 +20,7 @@ const MENU_DATA = {
       { name: 'Chorizo',    price: '4,50€', desc: 'Ibéricos' },
       { name: 'Morcilla', price: '4,50€' },
       { name: 'Longaniza', price: '4,50€' },
-      { name: 'Tortilla con jamón-mahonesa', price: '5,00€' },
+      { name: 'Tortilla con jamón y mayonesa', price: '5,00€' },
       { name: 'Tortilla de patatas', price: '4,50€' },
       { name: 'Jamón', price: '4,50€' },
       { name: 'Carne Mechada', price: '5,00€' },
@@ -90,16 +90,8 @@ const TE_DATA = [
 export default function DigitalMenu() {
   const { t } = useLanguage();
   const [isTeOpen, setIsTeOpen] = useState(false);
-  const [showFloatingCall, setShowFloatingCall] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      // Show button after scrolling past hero (approx 600px)
-      setShowFloatingCall(window.scrollY > 600);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+
 
   return (
     <section className="py-20 px-6 lg:px-20 bg-pearl-white min-h-screen">
@@ -211,7 +203,7 @@ export default function DigitalMenu() {
                          {t(`menu.items.${item.name}`)}
                        </h4>
                        {item.desc && (
-                         <p className="text-sm md:text-base font-serif italic text-neutral-dark/70 leading-relaxed font-medium">
+                         <p className="text-base md:text-lg font-serif italic text-neutral-dark/90 leading-relaxed font-medium">
                            {t(`menu.items.${item.desc}`)}
                          </p>
                        )}
@@ -303,13 +295,15 @@ export default function DigitalMenu() {
                     </p>
                  </div>
                  
-                 <Link 
-                   to="/playlist"
+                 <a 
+                   href="https://open.spotify.com/user/encapaco?si=t1PY-0vMRMKJW5ISArIJ7g"
+                   target="_blank"
+                   rel="noopener noreferrer"
                    className="group/btn relative inline-flex items-center gap-6 px-12 py-6 bg-sierra-gold rounded-full text-neutral-dark font-black uppercase tracking-[0.3em] text-[10px] no-underline hover:bg-white transition-all duration-500 shadow-xl overflow-hidden"
                  >
                     <span className="relative z-10">{t('menu.playlist_cta.button')}</span>
                     <ArrowRight size={16} className="relative z-10 group-hover/btn:translate-x-2 transition-transform" />
-                 </Link>
+                 </a>
               </div>
            </motion.div>
         </div>
@@ -367,29 +361,7 @@ export default function DigitalMenu() {
 
       </div>
 
-      {/* Floating Mobile Call Button - Specialized High-End UX */}
-      <AnimatePresence>
-        {showFloatingCall && (
-          <motion.div
-            initial={{ opacity: 0, y: 100, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 100, scale: 0.9 }}
-            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[400] w-full max-w-xs px-6 lg:hidden"
-          >
-             <a
-               href="tel:+34616600772"
-               className="flex items-center justify-center gap-4 py-6 bg-neutral-dark text-pearl-white rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/5 no-underline group hover:scale-105 active:scale-95 transition-all duration-500"
-             >
-                <div className="w-10 h-10 bg-sierra-gold rounded-full flex items-center justify-center shadow-lg shadow-sierra-gold/20">
-                   <Phone size={16} className="text-neutral-dark" />
-                </div>
-                <span className="text-[11px] font-black uppercase tracking-[0.4em]">
-                   {t('nav.call')}
-                </span>
-             </a>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
     </section>
   );
 }

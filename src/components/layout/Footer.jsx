@@ -36,12 +36,14 @@ export default function Footer() {
               <li><Link to="/" className="hover:text-pearl-white transition-colors no-underline">{t('nav.home')}</Link></li>
               <li><Link to="/nosotros" className="hover:text-pearl-white transition-colors no-underline">{t('nav.about')}</Link></li>
               <li>
-                <Link 
-                  to="/playlist" 
+                <a 
+                  href="https://open.spotify.com/user/encapaco?si=t1PY-0vMRMKJW5ISArIJ7g" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-sierra-gold transition-colors no-underline flex items-center gap-2"
                 >
                   {t('nav.playlist')} <Music size={14} className="text-sierra-gold" />
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -60,7 +62,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-4">
                  <Mail size={18} className="text-sierra-gold shrink-0" />
-                 <a href="mailto:paco@encapaco.com" className="text-sm font-serif italic text-pearl-white/60 hover:text-sierra-gold transition-colors no-underline">paco@encapaco.com</a>
+                 <a href="mailto:encapaco@gmail.com" className="text-sm font-serif italic text-pearl-white/60 hover:text-sierra-gold transition-colors no-underline">encapaco@gmail.com</a>
               </li>
             </ul>
           </div>

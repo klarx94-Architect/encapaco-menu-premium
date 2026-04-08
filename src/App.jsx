@@ -3,13 +3,20 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import ScrollToTop from './components/layout/ScrollToTop';
 
+import { useEffect } from 'react';
 // Pages
 import Home from './pages/Home';
 import Nosotros from './pages/Nosotros';
-import Playlist from './pages/Playlist';
 import AdminPaco from './pages/AdminPaco';
 
 import { LanguageProvider } from './context/LanguageContext';
+
+function PlaylistRedirect() {
+  useEffect(() => {
+    window.location.href = 'https://open.spotify.com/user/encapaco?si=t1PY-0vMRMKJW5ISArIJ7g';
+  }, []);
+  return null;
+}
 
 function App() {
 
@@ -27,7 +34,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/nosotros" element={<Nosotros />} />
-              <Route path="/playlist" element={<Playlist />} />
+              <Route path="/playlist" element={<PlaylistRedirect />} />
               <Route path="/admin-paco" element={<AdminPaco />} />
             </Routes>
           </main>
