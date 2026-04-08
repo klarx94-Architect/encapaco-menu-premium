@@ -71,9 +71,10 @@ export default function Footer() {
           <div>
             <h4 className="text-[10px] font-black uppercase tracking-[0.6em] text-sierra-gold mb-10">{t('footer.legal_title')}</h4>
             <ul className="space-y-6 text-[10px] font-bold uppercase tracking-widest text-pearl-white/70">
-              <li><a href="#" className="hover:text-sierra-gold transition-colors underline decoration-white/10 underline-offset-4">{t('footer.aviso')}</a></li>
-              <li><a href="#" className="hover:text-sierra-gold transition-colors underline decoration-white/10 underline-offset-4">{t('footer.privacidad')}</a></li>
-              <li><a href="#" className="hover:text-sierra-gold transition-colors underline decoration-white/10 underline-offset-4">{t('footer.cookies')}</a></li>
+              <li><Link to="/aviso-legal" className="hover:text-sierra-gold transition-colors underline decoration-white/10 underline-offset-4">{t('footer.aviso')}</Link></li>
+              <li><Link to="/politica-de-privacidad" className="hover:text-sierra-gold transition-colors underline decoration-white/10 underline-offset-4">{t('footer.privacidad')}</Link></li>
+              <li><Link to="/politica-de-cookies" className="hover:text-sierra-gold transition-colors underline decoration-white/10 underline-offset-4">{t('footer.cookies')}</Link></li>
+              <li><Link to="/accesibilidad" className="hover:text-sierra-gold transition-colors underline decoration-white/10 underline-offset-4">{t('footer.accesibilidad')}</Link></li>
             </ul>
           </div>
         </div>

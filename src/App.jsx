@@ -8,6 +8,11 @@ import { useEffect } from 'react';
 import Home from './pages/Home';
 import Nosotros from './pages/Nosotros';
 import AdminPaco from './pages/AdminPaco';
+// Legal Pages
+import LegalNotice from './pages/LegalNotice';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import CookiesPolicy from './pages/CookiesPolicy';
+import Accessibility from './pages/Accessibility';
 
 import { LanguageProvider } from './context/LanguageContext';
 
@@ -38,6 +43,12 @@ function App() {
               <Route path="/nosotros" element={<Nosotros />} />
               <Route path="/playlist" element={<PlaylistRedirect />} />
               <Route path="/admin-paco" element={<AdminPaco />} />
+              
+              {/* Legal Routes */}
+              <Route path="/aviso-legal" element={<LegalNotice />} />
+              <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
+              <Route path="/politica-de-cookies" element={<CookiesPolicy />} />
+              <Route path="/accesibilidad" element={<Accessibility />} />
             </Routes>
           </main>
 

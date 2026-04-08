@@ -161,7 +161,8 @@ export const translations = {
       reserved: "© 2026 ENCAPACO · PROYECTO SENIOR GASTRO",
       aviso: "Aviso Legal",
       privacidad: "Política de Privacidad",
-      cookies: "Política de Cookies"
+      cookies: "Política de Cookies",
+      accesibilidad: "Accesibilidad"
     }
   },
   en: {
@@ -326,7 +327,8 @@ export const translations = {
       reserved: "© 2026 ENCAPACO · SENIOR GASTRO PROJECT",
       aviso: "Legal Notice",
       privacidad: "Privacy Policy",
-      cookies: "Cookies Policy"
+      cookies: "Cookies Policy",
+      accesibilidad: "Accessibility"
     }
   },
   fr: {
@@ -491,7 +493,8 @@ export const translations = {
       reserved: "© 2026 ENCAPACO · PROJET SENIOR GASTRO",
       aviso: "Mentions Légales",
       privacidad: "Politique de Confidentialité",
-      cookies: "Politique relative aux Cookies"
+      cookies: "Politique relative aux Cookies",
+      accesibilidad: "Accessibilité"
     }
   }
 };
