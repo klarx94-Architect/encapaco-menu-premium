@@ -28,7 +28,7 @@ export default function Nosotros() {
       className="bg-pearl-white min-h-screen"
     >
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-10 overflow-hidden ceramic-gradient">
+      <section className="relative pt-[90px] lg:pt-[120px] pb-20 px-10 overflow-hidden ceramic-gradient">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
