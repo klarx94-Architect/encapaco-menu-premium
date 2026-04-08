@@ -16,6 +16,8 @@ import Accessibility from './pages/Accessibility';
 
 import { LanguageProvider } from './context/LanguageContext';
 
+import CookieBanner from './components/ui/CookieBanner';
+
 function PlaylistRedirect() {
   useEffect(() => {
     window.location.replace(
@@ -53,6 +55,7 @@ function App() {
           </main>
 
           <Footer />
+          <CookieBanner />
           
         </div>
       </BrowserRouter>
