@@ -13,7 +13,9 @@ import { LanguageProvider } from './context/LanguageContext';
 
 function PlaylistRedirect() {
   useEffect(() => {
-    window.location.href = 'https://open.spotify.com/user/encapaco?si=t1PY-0vMRMKJW5ISArIJ7g';
+    window.location.replace(
+      'https://open.spotify.com/user/encapaco?si=t1PY-0vMRMKJW5ISArIJ7g'
+    );
   }, []);
   return null;
 }

@@ -65,7 +65,7 @@ export default function Navbar() {
   const navLinks = [
     { name: t('nav.home'), href: '/', icon: <Utensils size={14} /> },
     { name: t('nav.about'), href: '/nosotros', icon: <Globe size={14} /> },
-    { name: t('nav.playlist'), href: '/playlist', icon: <Music size={14} />, isExternal: false },
+    { name: t('nav.playlist'), href: 'https://open.spotify.com/user/encapaco?si=t1PY-0vMRMKJW5ISArIJ7g', icon: <Music size={14} />, isExternal: true },
     { name: t('nav.directions'), href: 'https://www.google.com/maps/dir/?api=1&destination=Plaza+Mayor+2+Guejar+Sierra+Granada', icon: <MapPin size={14} />, isExternal: true },
   ];
 
