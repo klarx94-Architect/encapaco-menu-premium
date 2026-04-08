@@ -11,10 +11,9 @@
           "name_es": "Alcachofas con anchoas",
           "name_en": "Artichokes with anchovies",
           "name_fr": "Artichauts aux anchois",
+          "description_es": "",
           "price": "5,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "queso-horno",
@@ -22,12 +21,8 @@
           "name_en": "Oven-baked cured cheese",
           "name_fr": "Fromage affiné au four",
           "description_es": "Con tomate, orégano y pimentón dulce",
-          "description_en": "With tomato, oregano and sweet paprika",
-          "description_fr": "Avec tomate, origan et paprika doux",
           "price": "5,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "carne-salsa",
@@ -35,12 +30,8 @@
           "name_en": "Meat in sauce",
           "name_fr": "Viande en sauce",
           "description_es": "Receta de la abuela",
-          "description_en": "Grandma's recipe",
-          "description_fr": "Recette de grand-mère",
           "price": "5,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "pollo-completo",
@@ -48,12 +39,8 @@
           "name_en": "Full chicken",
           "name_fr": "Poulet complet",
           "description_es": "Tomate, lechuga, queso, cebolla y huevo",
-          "description_en": "Tomato, lettuce, cheese, onion and egg",
-          "description_fr": "Tomate, laitue, fromage, oignon et œuf",
           "price": "6,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "lomo-completo",
@@ -61,12 +48,8 @@
           "name_en": "Full pork loin",
           "name_fr": "Longe de porc complète",
           "description_es": "Tomate, lechuga, queso, cebolla y huevo",
-          "description_en": "Tomato, lettuce, cheese, onion and egg",
-          "description_fr": "Tomate, laitue, fromage, oignon et œuf",
           "price": "6,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "atun",
@@ -74,22 +57,17 @@
           "name_en": "Tuna",
           "name_fr": "Thon",
           "description_es": "Con tomate y lechuga",
-          "description_en": "With tomato and lettuce",
-          "description_fr": "Avec tomate et laitue",
           "price": "5,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "queso-curado",
           "name_es": "Queso curado",
           "name_en": "Cured cheese",
           "name_fr": "Fromage affiné",
+          "description_es": "",
           "price": "5,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "salchichon",
@@ -97,12 +75,8 @@
           "name_en": "Salami",
           "name_fr": "Saucisson",
           "description_es": "Ibéricos",
-          "description_en": "Iberian cold cuts",
-          "description_fr": "Charcuterie ibérique",
           "price": "4,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "chorizo",
@@ -110,73 +84,68 @@
           "name_en": "Chorizo",
           "name_fr": "Chorizo",
           "description_es": "Ibéricos",
-          "description_en": "Iberian cold cuts",
-          "description_fr": "Charcuterie ibérique",
           "price": "4,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "morcilla",
           "name_es": "Morcilla",
           "name_en": "Black pudding",
           "name_fr": "Boudin noir",
+          "description_es": "",
           "price": "4,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "longaniza",
           "name_es": "Longaniza",
           "name_en": "Longaniza sausage",
           "name_fr": "Saucisse Longaniza",
+          "description_es": "",
           "price": "4,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "tortilla-jamon-mayo",
           "name_es": "Tortilla con jamón y mayonesa",
           "name_en": "Omelette with ham & mayo",
           "name_fr": "Omelette au jambon-mayonnaise",
+          "description_es": "",
           "price": "5,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "tortilla-patatas",
           "name_es": "Tortilla de patatas",
           "name_en": "Spanish potato omelette",
           "name_fr": "Omelette aux pommes de terre",
+          "description_es": "",
           "price": "4,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "jamon",
           "name_es": "Jamón",
           "name_en": "Serrano ham",
           "name_fr": "Jambon Serrano",
+          "description_es": "",
           "price": "4,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "carne-mechada",
           "name_es": "Carne Mechada",
           "name_en": "Shredded meat",
           "name_fr": "Viande effilochée",
+          "description_es": "",
           "price": "5,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         }
+      ],
+      "visible": true,
+      "cover_image": "/assets/menu_new/bocadillos-2.jpg",
+      "cover_images": [
+        "/assets/menu_new/bocadillos-2.jpg"
       ]
     },
     {
@@ -191,12 +160,8 @@
           "name_en": "Full pork burger",
           "name_fr": "Burger porc complet",
           "description_es": "Tomate, lechuga, queso, cebolla y huevo",
-          "description_en": "Tomato, lettuce, cheese, onion and egg",
-          "description_fr": "Tomate, laitue, oignon et œuf",
           "price": "6,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "ternera-completa",
@@ -204,12 +169,8 @@
           "name_en": "Full beef burger",
           "name_fr": "Burger bœuf complet",
           "description_es": "Tomate, lechuga, queso, cebolla y huevo",
-          "description_en": "Tomato, lettuce, cheese, onion and egg",
-          "description_fr": "Tomate, laitue, oignon et œuf",
           "price": "8,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "pollo-completa",
@@ -217,12 +178,8 @@
           "name_en": "Full chicken burger",
           "name_fr": "Burger poulet complet",
           "description_es": "Tomate, lechuga, queso, cebolla y huevo",
-          "description_en": "Tomato, lettuce, cheese, onion and egg",
-          "description_fr": "Tomate, laitue, oignon et œuf",
           "price": "7,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "hamburguesa-brocoli",
@@ -230,23 +187,23 @@
           "name_en": "Broccoli burger",
           "name_fr": "Burger au brocoli",
           "description_es": "Tomate, lechuga, queso, cebolla y huevo",
-          "description_en": "Tomato, lettuce, cheese, onion and egg",
-          "description_fr": "Tomate, laitue, oignon et œuf",
           "price": "6,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "extra-bacon",
           "name_es": "Extra Bacon",
           "name_en": "Extra Bacon",
           "name_fr": "Bacon en supplément",
+          "description_es": "",
           "price": "+1,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         }
+      ],
+      "visible": true,
+      "cover_image": "/assets/bar_tapas/hamburgesas2-2814416.jpg",
+      "cover_images": [
+        "/assets/bar_tapas/hamburgesas2-2814416.jpg"
       ]
     },
     {
@@ -261,12 +218,8 @@
           "name_en": "Margherita",
           "name_fr": "Margherita",
           "description_es": "Tomate, mozzarella y orégano",
-          "description_en": "Tomato, mozzarella and oregano",
-          "description_fr": "Tomate, mozzarella et origan",
           "price": "10,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "jamon-queso",
@@ -274,12 +227,8 @@
           "name_en": "Ham and cheese",
           "name_fr": "Jambon et fromage",
           "description_es": "Tomate, mozzarella, jamón cocido y orégano",
-          "description_en": "Tomato, mozzarella, cooked ham and oregano",
-          "description_fr": "Tomate, mozzarella, jambon cuit et origan",
           "price": "11,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "5-quesos",
@@ -287,12 +236,8 @@
           "name_en": "5 cheeses",
           "name_fr": "5 fromages",
           "description_es": "Masa fina, tomate, mozzarella, Gouda, emmental, semicurado, queso azul y orégano",
-          "description_en": "Thin crust, tomato, mozzarella, Gouda, emmental, semi-cured, blue cheese and oregano",
-          "description_fr": "Pâte fine, tomate, mozzarella, Gouda, emmental, mi-affiné, fromage bleu et origan",
           "price": "11,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "verduras-cabra",
@@ -300,12 +245,8 @@
           "name_en": "Vegetables and goat cheese",
           "name_fr": "Légumes et fromage de chèvre",
           "description_es": "Espinacas, queso de cabra, cherry y orégano",
-          "description_en": "Spinach, goat cheese, cherry tomatoes and oregano",
-          "description_fr": "Épinards, fromage de chèvre, tomates cerises et origan",
           "price": "13,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "barbacoa",
@@ -313,12 +254,8 @@
           "name_en": "Barbecue",
           "name_fr": "Barbecue",
           "description_es": "Salsa barbacoa, carne, bacon, cebolla y orégano",
-          "description_en": "BBQ sauce, meat, bacon, onion and oregano",
-          "description_fr": "Sauce BBQ, viande, bacon, oignon et origan",
           "price": "13,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "4-estaciones",
@@ -326,13 +263,14 @@
           "name_en": "4 seasons",
           "name_fr": "4 saisons",
           "description_es": "Jamón cocido, atún, champiñones, cebolla, alcachofa, aceitunas y orégano",
-          "description_en": "Cooked ham, tuna, mushrooms, onion, artichoke, olives and oregano",
-          "description_fr": "Jambon cuit, thon, champignons, oignon, artichaut, olives et origan",
           "price": "13,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         }
+      ],
+      "visible": true,
+      "cover_image": "/assets/menu_new/pizzas.jpg",
+      "cover_images": [
+        "/assets/menu_new/pizzas.jpg"
       ]
     },
     {
@@ -347,12 +285,8 @@
           "name_en": "Ham and cheese",
           "name_fr": "Mixte (Jambon-Fromage)",
           "description_es": "Jamón York y queso",
-          "description_en": "Ham and cheese",
-          "description_fr": "Jambon et fromage",
           "price": "3,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "normal",
@@ -360,12 +294,8 @@
           "name_en": "Standard",
           "name_fr": "Normal",
           "description_es": "Tomate y lechuga",
-          "description_en": "Tomato and lettuce",
-          "description_fr": "Tomate et laitue",
           "price": "4,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "completo",
@@ -373,12 +303,8 @@
           "name_en": "Full",
           "name_fr": "Complet",
           "description_es": "Tomate, lechuga, cebolla y huevo",
-          "description_en": "Tomato, lettuce, onion and egg",
-          "description_fr": "Tomate, laitue, oignon et œuf",
           "price": "5,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "pollo-completo-sw",
@@ -386,33 +312,32 @@
           "name_en": "Full chicken",
           "name_fr": "Poulet complet",
           "description_es": "Tomate, lechuga, queso, cebolla y huevo",
-          "description_en": "Tomato, lettuce, cheese, onion and egg",
-          "description_fr": "Tomate, laitue, fromage, oignon et œuf",
           "price": "5,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "vegetal",
           "name_es": "Vegetal",
           "name_en": "Vegetable",
           "name_fr": "Végétal",
+          "description_es": "",
           "price": "5,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "tortilla-jamon-mayo-sw",
           "name_es": "Tortilla con jamón y mayonesa",
           "name_en": "Omelette with ham & mayo",
           "name_fr": "Omelette au jambon-mayonnaise",
+          "description_es": "",
           "price": "5,00€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         }
+      ],
+      "visible": true,
+      "cover_image": "/assets/menu_new/sandwiches2.jpg",
+      "cover_images": [
+        "/assets/menu_new/sandwiches2.jpg"
       ]
     },
     {
@@ -426,41 +351,42 @@
           "name_es": "Carne en salsa",
           "name_en": "Meat in sauce",
           "name_fr": "Viande en sauce",
+          "description_es": "",
           "price": "Consultar",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "enchilada",
           "name_es": "Enchilada",
           "name_en": "Enchilada",
           "name_fr": "Enchilada",
+          "description_es": "",
           "price": "Consultar",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "pincho-moruno",
           "name_es": "Pincho Moruno",
           "name_en": "Moorish skewer",
           "name_fr": "Brochette mauresque",
+          "description_es": "",
           "price": "Consultar",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "pincho-pollo",
           "name_es": "Pincho Pollo",
           "name_en": "Chicken skewer",
           "name_fr": "Brochette de poulet",
+          "description_es": "",
           "price": "Consultar",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         }
+      ],
+      "visible": true,
+      "cover_image": "/assets/menu_new/raciones.jpg",
+      "cover_images": [
+        "/assets/menu_new/raciones.jpg"
       ]
     },
     {
@@ -474,151 +400,141 @@
           "name_es": "Té negro con canela",
           "name_en": "Black tea with cinnamon",
           "name_fr": "Thé noir à la cannelle",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "te-pakistani",
           "name_es": "Té negro pakistaní",
           "name_en": "Pakistani black tea",
           "name_fr": "Thé noir pakistanais",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "te-gunpowder",
           "name_es": "Té verde china Gunpowder",
           "name_en": "Chinese Gunpowder green tea",
           "name_fr": "Thé vert de Chine Gunpowder",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "te-mango",
           "name_es": "Té verde con mango",
           "name_en": "Green tea with mango",
           "name_fr": "Thé vert à la mangue",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "te-pu-erh",
           "name_es": "Té rojo Pu Erh",
           "name_en": "Pu Erh red tea",
           "name_fr": "Thé rouge Pu Erh",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "te-naranja-limon",
           "name_es": "Té rojo con naranja y limón",
           "name_en": "Red tea with orange and lemon",
           "name_fr": "Thé rouge à l'orange et au citron",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "te-blanco-fresa",
           "name_es": "Té blanco con fresa/frambuesa",
           "name_en": "White tea with strawberry/raspberry",
           "name_fr": "Thé blanc fraise/framboise",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "manzanilla",
           "name_es": "Manzanilla",
           "name_en": "Chamomile",
           "name_fr": "Camomille",
+          "description_es": "",
           "price": "1,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "tila",
           "name_es": "Tila",
           "name_en": "Linden tea",
           "name_fr": "Tilleul",
+          "description_es": "",
           "price": "1,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "poleo-menta",
           "name_es": "Poleo menta",
           "name_en": "Pennyroyal mint",
           "name_fr": "Menthe-pouliot",
+          "description_es": "",
           "price": "1,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "te-sobre",
           "name_es": "Té de sobre (Negro/Rojo/Verde)",
           "name_en": "Teabag (Black/Red/Green)",
           "name_fr": "Thé en sachet (Noir/Rouge/Vert)",
+          "description_es": "",
           "price": "1,50€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "rooibos-floral",
           "name_es": "Rooibos floral",
           "name_en": "Floral Rooibos",
           "name_fr": "Rooibos floral",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "rooibos-frambuesa",
           "name_es": "Rooibos frambuesa",
           "name_en": "Raspberry Rooibos",
           "name_fr": "Rooibos framboise",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "rooibos-bosque",
           "name_es": "Rooibos frutas del bosque",
           "name_en": "Forest fruits Rooibos",
           "name_fr": "Rooibos fruits des bois",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         },
         {
           "id": "limon-jengibre",
           "name_es": "Limón y jengibre",
           "name_en": "Lemon and ginger",
           "name_fr": "Citron et gingembre",
+          "description_es": "",
           "price": "1,80€",
-          "visible": true,
-          "images": [],
-          "image_url": ""
+          "visible": true
         }
+      ],
+      "visible": true,
+      "cover_image": "/assets/menu_new/pizzas.jpg",
+      "cover_images": [
+        "/assets/menu_new/pizzas.jpg"
       ]
     }
   ]

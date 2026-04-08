@@ -3,19 +3,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, LogOut, Package, Eye, EyeOff, Edit3, 
   Save, Upload, CheckCircle2, ChevronRight, Image as ImageIcon,
-  Loader2, AlertCircle, X
+  Loader2, AlertCircle, X, Trash2, Plus
 } from 'lucide-react';
+import LanguageSwitcher from '../components/ui/LanguageSwitcher';
 
 const ADMIN_STORAGE_KEY = 'encapaco_admin_auth';
+
+const EMPTY_ITEM = {
+  id: '',
+  name_es: '',
+  name_en: '',
+  name_fr: '',
+  description_es: '',
+  price: '',
+  visible: true
+};
 
 const toBase64 = (file) => new Promise((resolve, reject) => {
   const reader = new FileReader();
   reader.readAsDataURL(file);
-  reader.onload = () => {
-    // Quitar el prefijo "data:image/jpeg;base64," — GitHub solo quiere el base64 puro
-    const base64 = reader.result.split(',')[1];
-    resolve(base64);
-  };
+  reader.onload = () => resolve(reader.result.split(',')[1]);
   reader.onerror = reject;
 });
 
@@ -26,9 +33,12 @@ export default function AdminPaco() {
   const [menuData, setMenuData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  
+  // UI states
+  const [expandedCategory, setExpandedCategory] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [activeImg, setActiveImg] = useState(0);
+  const [showAddItem, setShowAddItem] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(null);
 
   // Auth Check
   useEffect(() => {
@@ -58,31 +68,22 @@ export default function AdminPaco() {
     e.preventDefault();
     setAuthError('');
     setLoading(true);
-    
     try {
-      // Validate password by trying to fetch (or we just use the update with empty data and check for 401)
       const res = await fetch('/api/menu-update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password, data: menuData || {} })
       });
-
-      if (res.status === 200 || res.status === 204 || (res.status === 400 && !menuData)) {
-         // If 200/204, pass is correct. If 400 because data was empty but pass was correct, also fine.
-         // Actually, let's just check for 401.
-          if (res.status !== 401) {
-            sessionStorage.setItem(ADMIN_STORAGE_KEY, '1');
-            sessionStorage.setItem('encapaco_admin_pw', password);
-            setIsAuthenticated(true);
-            if (!menuData) fetchMenu();
-          } else {
-            setAuthError('Contraseña incorrecta. Solo el director de orquesta tiene la llave.');
-          }
-      } else if (res.status === 401) {
+      if (res.status !== 401) {
+        sessionStorage.setItem(ADMIN_STORAGE_KEY, '1');
+        sessionStorage.setItem('encapaco_admin_pw', password);
+        setIsAuthenticated(true);
+        if (!menuData) fetchMenu();
+      } else {
         setAuthError('Contraseña incorrecta. Solo el director de orquesta tiene la llave.');
       }
     } catch (err) {
-      setAuthError('Error de conexión. Inténtalo de nuevo.');
+      setAuthError('Error de conexión.');
     } finally {
       setLoading(false);
     }
@@ -94,160 +95,137 @@ export default function AdminPaco() {
     setPassword('');
   };
 
-  const toggleVisibility = (catId, itemId = null) => {
-    const newData = { ...menuData };
-    if (itemId) {
-      const cat = newData.categories.find(c => c.id === catId);
-      const item = cat.items.find(i => i.id === itemId);
-      item.visible = !item.visible;
-    } else {
-      const cat = newData.categories.find(c => c.id === catId);
-      cat.visible = !cat.visible;
-    }
-    setMenuData(newData);
-  };
-
   const handleSaveAll = async () => {
     setSaving(true);
     try {
       const res = await fetch('/api/menu-update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: password || '', data: menuData })
+        body: JSON.stringify({ password, data: menuData })
       });
-      if (res.ok) {
-        alert('Cambios guardados con éxito.');
-      } else {
-        alert('Error al guardar. Verifica la conexión.');
-      }
+      if (res.ok) alert('Carta maestros actualizada en el repositorio.');
+      else alert('Error al guardar.');
     } catch (err) {
-      alert('Error crítico al guardar.');
+      alert('Error crítico de conexión.');
     } finally {
       setSaving(false);
     }
   };
 
-  const handleImageUpload = async (e) => {
+  // --- Category Handlers ---
+
+  const setActiveCover = (catId, imageUrl) => {
+    const newData = { ...menuData };
+    const cat = newData.categories.find(c => c.id === catId);
+    cat.cover_image = imageUrl;
+    setMenuData(newData);
+  };
+
+  const handleCoverImageUpload = async (e, catId) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    setUploading(true);
+    setUploadingCover(catId);
     try {
       const base64 = await toBase64(file);
-      const extension = file.name.split('.').pop() || 'jpg';
-      const filename = `${editingItem.id}-${Date.now()}.${extension}`;
-      
+      const ext = file.name.split('.').pop() || 'jpg';
+      const filename = `${catId}-cover-${Date.now()}.${ext}`;
       const res = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          password: password, 
-          filename,
-          base64,
-        }),
+        body: JSON.stringify({ password, filename, base64 }),
       });
-      
       const data = await res.json();
       if (data.url) {
-        const currentImages = editingItem.images || (editingItem.image_url ? [editingItem.image_url] : []);
-        setEditingItem({ 
-          ...editingItem, 
-          images: [...currentImages, data.url],
-          image_url: data.url 
-        });
-        setActiveImg(currentImages.length);
-      } else {
-        alert(data.error || 'Error subiendo imagen');
+        const newData = { ...menuData };
+        const cat = newData.categories.find(c => c.id === catId);
+        cat.cover_images = [...(cat.cover_images || []), data.url];
+        cat.cover_image = data.url;
+        setMenuData(newData);
       }
     } catch (err) {
-      console.error('Error subiendo imagen:', err);
-      alert('Error de conexión al subir imagen');
+      alert('Error subiendo imagen');
     } finally {
-      setUploading(false);
+      setUploadingCover(null);
     }
   };
 
-  const handleDeleteImage = (idx) => {
-    const images = editingItem.images || (editingItem.image_url ? [editingItem.image_url] : []);
-    const newImages = images.filter((_, i) => i !== idx);
-    setEditingItem({
-      ...editingItem,
-      images: newImages,
-      image_url: newImages[0] || '',
-    });
-    setActiveImg(Math.max(0, activeImg - 1));
+  const handleDeleteCoverImage = (catId, imgIdx) => {
+    const newData = { ...menuData };
+    const cat = newData.categories.find(c => c.id === catId);
+    const deletedImg = cat.cover_images[imgIdx];
+    cat.cover_images = cat.cover_images.filter((_, i) => i !== imgIdx);
+    if (cat.cover_image === deletedImg) {
+      cat.cover_image = cat.cover_images[0] || '';
+    }
+    setMenuData(newData);
   };
 
-  const updateItemDetails = () => {
+  const toggleCategoryVisibility = (catId) => {
     const newData = { ...menuData };
-    const cat = newData.categories.find(c => c.id === editingItem.catId);
-    const itemIdx = cat.items.findIndex(i => i.id === editingItem.id);
-    
-    const finalImages = editingItem.images || (editingItem.image_url ? [editingItem.image_url] : []);
-    const updatedItem = {
-      ...editingItem,
-      images: finalImages,
-      image_url: finalImages[0] || ''
-    };
-    
-    cat.items[itemIdx] = updatedItem;
+    const cat = newData.categories.find(c => c.id === catId);
+    cat.visible = cat.visible === false;
+    setMenuData(newData);
+  };
+
+  // --- Item Handlers ---
+
+  const toggleItemVisibility = (catId, itemId) => {
+    const newData = { ...menuData };
+    const cat = newData.categories.find(c => c.id === catId);
+    const item = cat.items.find(i => i.id === itemId);
+    item.visible = item.visible === false;
+    setMenuData(newData);
+  };
+
+  const handleUpdateItem = (catId) => {
+    const newData = { ...menuData };
+    const cat = newData.categories.find(c => c.id === catId);
+    const idx = cat.items.findIndex(i => i.id === editingItem.id);
+    cat.items[idx] = { ...editingItem };
     setMenuData(newData);
     setEditingItem(null);
+  };
+
+  const handleAddItem = (catId) => {
+    if (!editingItem?.name_es?.trim()) return;
+    const newData = { ...menuData };
+    const cat = newData.categories.find(c => c.id === catId);
+    const newItem = {
+      id: editingItem.name_es.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-'),
+      name_es: editingItem.name_es,
+      name_en: editingItem.name_en || editingItem.name_es,
+      name_fr: editingItem.name_fr || editingItem.name_es,
+      description_es: editingItem.description_es || '',
+      price: editingItem.price || 'Consultar',
+      visible: true,
+    };
+    cat.items.push(newItem);
+    setMenuData(newData);
+    setEditingItem(null);
+    setShowAddItem(false);
+  };
+
+  const handleDeleteItem = (catId, itemId) => {
+    if (!window.confirm('¿Eliminar este plato del menú? Esta acción se guardará al pulsar "Guardar todo".')) return;
+    const newData = { ...menuData };
+    const cat = newData.categories.find(c => c.id === catId);
+    cat.items = cat.items.filter(i => i.id !== itemId);
+    setMenuData(newData);
   };
 
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-pearl-white flex items-center justify-center p-6">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full p-12 rounded-[3.5rem] bg-white border border-black/5 shadow-2xl relative overflow-hidden"
-        >
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-md w-full p-12 rounded-[3.5rem] bg-white border border-black/5 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sierra-gold/30 to-transparent" />
-          
-          <div className="w-20 h-20 bg-sierra-gold/10 rounded-full flex items-center justify-center mx-auto mb-10">
-            <Package size={32} className="text-sierra-gold" />
-          </div>
-          
+          <div className="w-20 h-20 bg-sierra-gold/10 rounded-full flex items-center justify-center mx-auto mb-10"><Package size={32} className="text-sierra-gold" /></div>
           <h1 className="text-3xl font-serif font-black text-neutral-dark mb-4 text-center">Acceso Maestro</h1>
-          <p className="text-neutral-dark/40 text-center mb-10 font-serif italic text-sm leading-relaxed">
-            "Para el director de orquesta. <br/>Introduce la contraseña para gestionar el refugio."
-          </p>
-
+          <p className="text-neutral-dark/40 text-center mb-10 font-serif italic text-sm leading-relaxed">"Para el director de orquesta. <br/>Introduce la contraseña para gestionar el refugio."</p>
           <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <input 
-                type="password" 
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-6 py-4 rounded-2xl bg-pearl-white border border-black/5 focus:outline-none focus:ring-2 focus:ring-sierra-gold/20 font-sans"
-                required
-              />
-            </div>
-            
-            <AnimatePresence>
-              {authError && (
-                <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="flex items-center gap-2 text-terracotta-deep/80 text-xs font-bold uppercase tracking-wider px-2"
-                >
-                  <AlertCircle size={14} />
-                  <span>{authError}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <button 
-              type="submit"
-              disabled={loading}
-              className="w-full py-5 rounded-full bg-neutral-dark text-white font-black uppercase tracking-[0.3em] text-[10px] hover:bg-black transition-all shadow-xl disabled:opacity-50 flex items-center justify-center gap-4"
-            >
-              {loading ? <Loader2 className="animate-spin" size={16} /> : 'Entrar al Panel'}
-            </button>
+            <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-6 py-4 rounded-2xl bg-pearl-white border border-black/5 focus:outline-none focus:ring-2 focus:ring-sierra-gold/20 font-sans" required />
+            <AnimatePresence>{authError && <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="flex items-center gap-2 text-terracotta-deep/80 text-xs font-bold uppercase tracking-wider px-2"><AlertCircle size={14} /><span>{authError}</span></motion.div>}</AnimatePresence>
+            <button type="submit" disabled={loading} className="w-full py-5 rounded-full bg-neutral-dark text-white font-black uppercase tracking-[0.3em] text-[10px] hover:bg-black transition-all shadow-xl disabled:opacity-50 flex items-center justify-center gap-4">{loading ? <Loader2 className="animate-spin" size={16} /> : 'Entrar al Panel'}</button>
           </form>
-          
           <p className="mt-12 text-center text-[10px] uppercase tracking-widest font-black text-neutral-dark/20">Protocolo Senior Gastro v2.0</p>
         </motion.div>
       </div>
@@ -256,299 +234,156 @@ export default function AdminPaco() {
 
   return (
     <div className="min-h-screen bg-pearl-white font-sans text-neutral-dark">
-      {/* Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 h-full w-20 lg:w-72 bg-white border-r border-black/5 p-6 z-[600] flex flex-col justify-between overflow-hidden">
+      {/* Sidebar */}
+      <nav className="fixed left-0 top-0 h-full w-20 lg:w-72 bg-white border-r border-black/5 p-6 z-[600] flex flex-col justify-between">
         <div className="space-y-12">
           <div className="flex items-center gap-4 px-2">
-            <div className="w-10 h-10 bg-sierra-gold rounded-xl flex items-center justify-center shadow-lg shadow-sierra-gold/20">
-              <Package size={20} className="text-white" />
-            </div>
+            <div className="w-10 h-10 bg-sierra-gold rounded-xl flex items-center justify-center shadow-lg"><Package size={20} className="text-white" /></div>
             <span className="hidden lg:block text-neutral-dark uppercase tracking-[0.2em] text-[11px] font-black">Encapaco Admin</span>
           </div>
-          
-          <div className="space-y-4">
-            <button className="w-full flex items-center gap-4 p-4 bg-neutral-dark text-white rounded-2xl transition-all shadow-lg">
-              <LayoutDashboard size={20} />
-              <span className="hidden lg:block font-bold text-sm">Carta Maestro</span>
-            </button>
-          </div>
+          <button className="w-full flex items-center gap-4 p-4 bg-neutral-dark text-white rounded-2xl shadow-lg">
+            <LayoutDashboard size={20} /><span className="hidden lg:block font-bold text-sm">Carta Maestro</span>
+          </button>
         </div>
-        
-        <button 
-          onClick={handleLogout}
-          className="flex items-center gap-4 p-4 text-terracotta-deep hover:bg-terracotta-mid/5 w-full rounded-2xl transition-all"
-        >
-          <LogOut size={20} />
-          <span className="hidden lg:block font-bold text-sm">Cerrar Sesión</span>
-        </button>
+        <button onClick={handleLogout} className="flex items-center gap-4 p-4 text-terracotta-deep hover:bg-terracotta-mid/5 w-full rounded-2xl transition-all"><LogOut size={20} /><span className="hidden lg:block font-bold text-sm">Cerrar Sesión</span></button>
       </nav>
 
+      {/* Main Content */}
       <main className="pl-20 lg:pl-72 p-6 md:p-12 pb-32">
         <header className="mb-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           <div>
             <h1 className="text-4xl md:text-5xl font-serif font-black mb-3">Carta Inteligente</h1>
-            <p className="text-neutral-dark/40 italic font-serif text-lg">Gestiona la disponibilidad y precios del refugio.</p>
+            <p className="text-neutral-dark/40 italic font-serif text-lg">Gestiona las portadas de categorías y sus platos.</p>
           </div>
-          
-          <button 
-            onClick={handleSaveAll}
-            disabled={saving}
-            className="group flex items-center gap-4 px-10 py-5 bg-sierra-gold text-neutral-dark rounded-full font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl hover:scale-105 transition-all disabled:opacity-50"
-          >
+          <button onClick={handleSaveAll} disabled={saving} className="group flex items-center gap-4 px-10 py-5 bg-sierra-gold text-neutral-dark rounded-full font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl hover:scale-105 transition-all">
             {saving ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
-            <span>Guardar todos los cambios</span>
+            <span>Guardar todo al repositorio</span>
           </button>
         </header>
 
         {loading ? (
           <div className="h-64 flex flex-col items-center justify-center gap-6 text-neutral-dark/20 uppercase tracking-[0.4em] text-xs font-black">
-            <Loader2 className="animate-spin" size={32} />
-            <span>Sintonizando datos...</span>
+            <Loader2 className="animate-spin" size={32} /><span>Sintonizando datos...</span>
           </div>
         ) : (
-          <div className="space-y-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {menuData?.categories.map(category => (
-              <div key={category.id} className="relative">
-                <div className="flex items-center justify-between mb-8 bg-white/50 backdrop-blur-md p-6 rounded-3xl border border-black/5">
-                  <div className="flex items-center gap-6">
-                    <div className="w-12 h-12 bg-neutral-dark text-white rounded-2xl flex items-center justify-center font-serif font-black text-xl">
-                      {category.name_es.charAt(0)}
-                    </div>
-                    <h2 className="text-2xl font-serif font-black">{category.name_es}</h2>
+              <motion.div key={category.id} className="bg-white rounded-[2.5rem] border border-black/5 shadow-sm overflow-hidden flex flex-col">
+                <div className="relative h-40 bg-neutral-dark overflow-hidden">
+                  {category.cover_image ? (
+                    <img src={category.cover_image} alt={category.name_es} className="w-full h-full object-cover opacity-70" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center"><ImageIcon size={40} className="text-white/20" /></div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-r from-neutral-dark/80 to-transparent flex flex-col justify-end p-6">
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-sierra-gold mb-1">Categoría</span>
+                    <h2 className="text-2xl font-serif font-black text-white">{category.name_es}</h2>
                   </div>
-                  <button 
-                    onClick={() => toggleVisibility(category.id)}
-                    className={`flex items-center gap-3 px-6 py-3 rounded-full transition-all text-[10px] font-black uppercase tracking-widest ${
-                      category.visible === false 
-                        ? 'bg-neutral-dark/10 text-neutral-dark/40' 
-                        : 'bg-green-500/10 text-green-600'
-                    }`}
-                  >
-                    {category.visible === false ? <EyeOff size={14} /> : <Eye size={14} />}
-                    {category.visible === false ? 'Oculta en web' : 'Visible'}
+                  <button onClick={() => toggleCategoryVisibility(category.id)} className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest backdrop-blur-md ${category.visible !== false ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-black/30 text-white/40 border border-white/10'}`}>
+                    {category.visible !== false ? '● Visible' : '○ Oculta'}
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {category.items.map(item => (
-                    <motion.div 
-                      key={item.id}
-                      layoutId={item.id}
-                      className={`bg-white p-6 rounded-[2.5rem] border transition-all ${
-                        item.visible === false ? 'border-dashed border-black/10 opacity-70' : 'border-black/5 shadow-sm'
-                      }`}
-                    >
-                      <div className="flex justify-between items-start mb-6">
-                        <div className="w-16 h-16 bg-pearl-white rounded-2xl overflow-hidden flex items-center justify-center border border-black/5">
-                          {item.image_url ? (
-                            <img src={item.image_url} alt="" className="w-full h-full object-cover" />
-                          ) : (
-                            <ImageIcon className="text-black/5" size={24} />
-                          )}
-                        </div>
-                        <div className="flex gap-2">
-                           <button 
-                            onClick={() => toggleVisibility(category.id, item.id)}
-                            className={`p-3 rounded-full transition-colors ${
-                              item.visible === false ? 'text-neutral-dark/30 hover:bg-black/5' : 'text-green-500 hover:bg-green-500/10'
-                            }`}
-                          >
-                            {item.visible === false ? <EyeOff size={18} /> : <Eye size={18} />}
-                          </button>
-                          <button 
-                            onClick={() => {
-                              setEditingItem({ ...item, catId: category.id });
-                              setActiveImg(0);
-                            }}
-                            className="p-3 text-sierra-gold hover:bg-sierra-gold/10 rounded-full transition-colors"
-                          >
-                            <Edit3 size={18} />
-                          </button>
-                        </div>
+                <div className="px-6 pt-4 pb-2">
+                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                    {(category.cover_images || []).map((img, idx) => (
+                      <div key={idx} className="relative shrink-0 group">
+                        <button onClick={() => setActiveCover(category.id, img)} className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${category.cover_image === img ? 'border-sierra-gold' : 'border-transparent opacity-60 hover:opacity-100'}`}>
+                          <img src={img} alt="" className="w-full h-full object-cover" />
+                        </button>
+                        <button onClick={() => handleDeleteCoverImage(category.id, idx)} className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                          <X size={10} />
+                        </button>
                       </div>
-                      
-                      <p className="text-[10px] font-black uppercase tracking-widest text-neutral-dark/30 mb-2">{item.price}</p>
-                      <h3 className="text-xl font-serif font-black leading-tight mb-2 line-clamp-1">{item.name_es}</h3>
-                      <p className="text-xs text-neutral-dark/40 italic font-serif line-clamp-2 min-h-[32px]">{item.description_es || 'Sin descripción'}</p>
-                    </motion.div>
-                  ))}
+                    ))}
+                    <label className="shrink-0 w-14 h-14 rounded-xl border-2 border-dashed border-black/10 flex items-center justify-center cursor-pointer hover:border-sierra-gold/40 hover:bg-sierra-gold/5 transition-all">
+                      {uploadingCover === category.id ? <Loader2 size={16} className="animate-spin text-sierra-gold" /> : <Plus size={16} className="text-black/20" />}
+                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleCoverImageUpload(e, category.id)} />
+                    </label>
+                  </div>
                 </div>
-              </div>
+
+                <div className="px-6 pb-6 mt-auto flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-neutral-dark/30">{category.items?.length || 0} platos</span>
+                  <button onClick={() => setExpandedCategory(category.id)} className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-sierra-gold hover:text-neutral-dark transition-colors">
+                    <Edit3 size={12} />Gestionar platos
+                  </button>
+                </div>
+              </motion.div>
             ))}
           </div>
         )}
       </main>
 
-      {/* Editing Modal */}
+      {/* Expanded Modal (Items) */}
       <AnimatePresence>
-        {editingItem && (
-          <div className="fixed inset-0 z-[1000] flex items-center justify-center p-6">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setEditingItem(null)}
-              className="absolute inset-0 bg-neutral-dark/60 backdrop-blur-xl"
-            />
-            
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-2xl bg-white rounded-[4rem] overflow-hidden shadow-2xl flex flex-col md:flex-row"
-            >
-              <div className="w-full md:w-1/2 bg-pearl-white p-12 flex flex-col items-center justify-center relative border-b md:border-b-0 md:border-r border-black/5">
-                 {(() => {
-                    const images = editingItem.images || (editingItem.image_url ? [editingItem.image_url] : []);
-                    
-                    return (
-                      <div className="w-full flex flex-col items-center gap-6">
-                        {/* Imagen principal */}
-                        <div className="relative w-full aspect-square rounded-[3rem] overflow-hidden bg-white border-8 border-white shadow-xl group">
-                          {images.length > 0 ? (
-                            <>
-                              <img 
-                                src={images[activeImg]} 
-                                alt="" 
-                                className="w-full h-full object-cover transition-all duration-300" 
-                              />
-                              <button
-                                onClick={() => handleDeleteImage(activeImg)}
-                                className="absolute top-4 right-4 w-10 h-10 bg-red-500/90 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                                title="Eliminar esta imagen"
-                              >
-                                <X size={16} />
-                              </button>
-                            </>
-                          ) : (
-                            <div className="w-full h-full flex flex-col items-center justify-center gap-4 text-neutral-dark/10">
-                              <ImageIcon size={64} />
-                              <span className="text-[10px] font-black uppercase tracking-widest">Sin imagen</span>
-                            </div>
-                          )}
+        {expandedCategory && (() => {
+          const cat = menuData.categories.find(c => c.id === expandedCategory);
+          return (
+            <div className="fixed inset-0 z-[1000] flex items-end sm:items-center justify-center p-0 sm:p-6">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { setExpandedCategory(null); setEditingItem(null); setShowAddItem(false); }} className="absolute inset-0 bg-neutral-dark/60 backdrop-blur-xl" />
+              <motion.div initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 60 }} className="relative w-full max-w-2xl bg-white rounded-t-[3rem] sm:rounded-[3rem] overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
+                <div className="p-8 border-b border-black/5 flex items-center justify-between shrink-0">
+                  <div><p className="text-[9px] font-black uppercase tracking-[0.3em] text-sierra-gold mb-1">Categoría</p><h2 className="text-2xl font-serif font-black">{cat.name_es}</h2></div>
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => setShowAddItem(true)} className="flex items-center gap-2 px-5 py-3 bg-sierra-gold text-neutral-dark rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all"><Plus size={14} />Añadir plato</button>
+                    <button onClick={() => { setExpandedCategory(null); setEditingItem(null); setShowAddItem(false); }} className="text-neutral-dark/20 hover:text-neutral-dark p-2 transition-colors"><X size={24} /></button>
+                  </div>
+                </div>
 
-                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
-                            <label className="cursor-pointer bg-white/90 backdrop-blur-md text-neutral-dark px-6 py-3 rounded-full font-black uppercase tracking-widest text-[10px] flex items-center gap-2 shadow-lg hover:bg-white transition-all whitespace-nowrap">
-                              <Upload size={12} />
-                              {uploading ? 'Subiendo...' : images.length > 0 ? '+ Añadir foto' : 'Subir foto'}
-                              <input 
-                                type="file" 
-                                className="hidden" 
-                                accept="image/*" 
-                                onChange={handleImageUpload} 
-                                disabled={uploading} 
-                              />
-                            </label>
-                          </div>
-
-                          {uploading && (
-                            <div className="absolute inset-0 z-30 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center gap-4">
-                              <Loader2 className="animate-spin text-sierra-gold" size={40} />
-                              <div className="space-y-1">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-dark/40">Guardando en repositorio...</p>
-                                <p className="text-[10px] text-neutral-dark/30 font-serif italic">Visible en web en ~30 seg</p>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Miniaturas del carrusel */}
-                        {images.length > 1 && (
-                          <div className="flex gap-2 flex-wrap justify-center">
-                            {images.map((img, idx) => (
-                              <button
-                                key={idx}
-                                onClick={() => setActiveImg(idx)}
-                                className={`w-12 h-12 rounded-xl overflow-hidden border-2 transition-all ${
-                                  idx === activeImg ? 'border-sierra-gold scale-110' : 'border-transparent opacity-60 hover:opacity-100'
-                                }`}
-                              >
-                                <img src={img} alt="" className="w-full h-full object-cover" />
-                              </button>
-                            ))}
-                          </div>
-                        )}
-
-                        <p className="text-[10px] font-black uppercase tracking-widest text-neutral-dark/20 text-center">
-                          {images.length} foto{images.length !== 1 ? 's' : ''} · ID: {editingItem.id}
-                        </p>
+                <div className="overflow-y-auto flex-1 p-6 space-y-3">
+                  {showAddItem && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="bg-sierra-gold/5 border border-sierra-gold/20 rounded-3xl p-6 space-y-4 overflow-hidden">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-sierra-gold">Nuevo plato</p>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="col-span-2"><label className="text-[9px] font-black uppercase tracking-widest text-neutral-dark/40 mb-2 block">Nombre (ES) *</label><input type="text" placeholder="Ej: Pollo completo" value={editingItem?.name_es || ''} onChange={(e) => setEditingItem({ ...(editingItem || EMPTY_ITEM), name_es: e.target.value })} className="w-full px-5 py-3 rounded-xl bg-white border border-black/5 focus:outline-none font-bold text-sm" /></div>
+                        <div><label className="text-[9px] font-black uppercase tracking-widest text-neutral-dark/40 mb-2 block">Precio</label><input type="text" placeholder="Ej: 5,50€" value={editingItem?.price || ''} onChange={(e) => setEditingItem({ ...(editingItem || EMPTY_ITEM), price: e.target.value })} className="w-full px-5 py-3 rounded-xl bg-white border border-black/5 focus:outline-none font-black text-sierra-gold text-sm" /></div>
+                        <div className="col-span-2"><label className="text-[9px] font-black uppercase tracking-widest text-neutral-dark/40 mb-2 block">Descripción (ES)</label><input type="text" placeholder="Ej: Con tomate y lechuga" value={editingItem?.description_es || ''} onChange={(e) => setEditingItem({ ...(editingItem || EMPTY_ITEM), description_es: e.target.value })} className="w-full px-5 py-3 rounded-xl bg-white border border-black/5 focus:outline-none font-serif italic text-sm" /></div>
                       </div>
-                    );
-                 })()}
-              </div>
+                      <div className="flex gap-3 pt-2">
+                        <button onClick={() => handleAddItem(cat.id)} className="flex-1 py-3 rounded-full bg-neutral-dark text-white text-[10px] font-black uppercase tracking-widest hover:bg-black transition-colors">Confirmar y añadir</button>
+                        <button onClick={() => { setShowAddItem(false); setEditingItem(null); }} className="px-6 py-3 rounded-full border border-black/10 text-neutral-dark/40 text-[10px] font-black uppercase tracking-widest hover:border-black/30 transition-colors">Cancelar</button>
+                      </div>
+                    </motion.div>
+                  )}
 
-              <div className="w-full md:w-1/2 p-12 space-y-8">
-                <div className="flex justify-between items-start">
-                   <h2 className="text-3xl font-serif font-black">Editar Plato</h2>
-                   <button onClick={() => setEditingItem(null)} className="text-neutral-dark/20 hover:text-neutral-dark transition-colors">
-                      <X size={24} />
-                   </button>
-                </div>
-
-                <div className="space-y-6">
-                  <div>
-                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-dark/40 mb-3 block">Nombre (ES)</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.name_es}
-                      onChange={(e) => setEditingItem({ ...editingItem, name_es: e.target.value })}
-                      className="w-full px-6 py-4 rounded-2xl bg-pearl-white border border-black/5 focus:outline-none font-bold"
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-dark/40 mb-3 block">Precio</label>
-                      <input 
-                        type="text" 
-                        value={editingItem.price}
-                        onChange={(e) => setEditingItem({ ...editingItem, price: e.target.value })}
-                        className="w-full px-6 py-4 rounded-2xl bg-pearl-white border border-black/5 focus:outline-none font-black text-sierra-gold"
-                      />
+                  {cat.items.map((item) => (
+                    <div key={item.id} className={`flex items-center gap-4 p-4 rounded-2xl border transition-all ${item.visible === false ? 'border-dashed border-black/5 bg-black/[0.02] opacity-60' : 'border-black/5 bg-white'}`}>
+                      <div className="flex-1 min-w-0">
+                        {editingItem?.id === item.id && editingItem?.catId === cat.id ? (
+                          <div className="space-y-2">
+                            <input type="text" value={editingItem.name_es} onChange={(e) => setEditingItem({ ...editingItem, name_es: e.target.value })} className="w-full px-3 py-2 rounded-xl bg-pearl-white border border-black/5 font-bold text-sm" />
+                            <div className="flex gap-2">
+                              <input type="text" value={editingItem.price} onChange={(e) => setEditingItem({ ...editingItem, price: e.target.value })} className="w-28 px-3 py-2 rounded-xl bg-pearl-white border border-black/5 font-black text-sierra-gold text-sm" />
+                              <input type="text" value={editingItem.description_es || ''} onChange={(e) => setEditingItem({ ...editingItem, description_es: e.target.value })} className="flex-1 px-3 py-2 rounded-xl bg-pearl-white border border-black/5 font-serif italic text-sm" />
+                            </div>
+                            <div className="flex gap-2 pt-1">
+                              <button onClick={() => handleUpdateItem(cat.id)} className="flex items-center gap-1.5 px-4 py-2 bg-neutral-dark text-white rounded-full text-[9px] font-black uppercase tracking-widest"><CheckCircle2 size={11} /> Guardar</button>
+                              <button onClick={() => setEditingItem(null)} className="px-4 py-2 border border-black/10 rounded-full text-neutral-dark/40 text-[9px] font-black uppercase tracking-widest">Cancelar</button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <p className="font-serif font-black text-sm text-neutral-dark truncate">{item.name_es}</p>
+                            {item.description_es && <p className="text-[11px] text-neutral-dark/40 font-serif italic truncate">{item.description_es}</p>}
+                          </>
+                        )}
+                      </div>
+                      {editingItem?.id !== item.id && (
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-[11px] font-black text-sierra-gold whitespace-nowrap">{item.price || '—'}</span>
+                          <button onClick={() => toggleItemVisibility(cat.id, item.id)} className={`p-2 rounded-full transition-colors ${item.visible === false ? 'text-neutral-dark/20 hover:bg-black/5' : 'text-green-500 hover:bg-green-500/10'}`}>{item.visible === false ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                          <button onClick={() => setEditingItem({ ...item, catId: cat.id })} className="p-2 text-sierra-gold hover:bg-sierra-gold/10 rounded-full transition-colors"><Edit3 size={15} /></button>
+                          <button onClick={() => handleDeleteItem(cat.id, item.id)} className="p-2 text-red-400/60 hover:bg-red-500/10 hover:text-red-500 rounded-full transition-colors"><Trash2 size={15} /></button>
+                        </div>
+                      )}
                     </div>
-                  </div>
-
-                  <div>
-                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-dark/40 mb-3 block">Descripción (ES)</label>
-                    <textarea 
-                      value={editingItem.description_es || ''}
-                      onChange={(e) => setEditingItem({ ...editingItem, description_es: e.target.value })}
-                      className="w-full px-6 py-4 rounded-2xl bg-pearl-white border border-black/5 focus:outline-none font-serif italic text-sm min-h-[100px]"
-                    />
-                  </div>
+                  ))}
                 </div>
-
-                <button 
-                  onClick={updateItemDetails}
-                  className="w-full py-5 rounded-full bg-neutral-dark text-white font-black uppercase tracking-[0.3em] text-[10px] hover:bg-black transition-all shadow-xl flex items-center justify-center gap-4"
-                >
-                  <CheckCircle2 size={16} />
-                  Actualizar Datos
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Floating Save Reminder */}
-      <AnimatePresence>
-        {menuData && (
-          <motion.div 
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[800] lg:hidden"
-          >
-             <button 
-              onClick={handleSaveAll}
-              disabled={saving}
-              className="flex items-center gap-4 px-10 py-5 bg-sierra-gold text-neutral-dark rounded-full font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl active:scale-95 transition-all"
-            >
-              {saving ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
-              Guardar Cambios
-            </button>
-          </motion.div>
-        )}
+              </motion.div>
+            </div>
+          );
+        })()}
       </AnimatePresence>
     </div>
   );

@@ -104,7 +104,7 @@ export default function DigitalMenu() {
           data.categories.forEach(cat => {
             if (cat.visible !== false) {
               normalized[cat.name_es] = {
-                image: cat.image_url || MENU_DATA[cat.name_es]?.image || '/assets/menu_new/pizzas.jpg',
+                image: cat.cover_image || MENU_DATA[cat.name_es]?.image || '/assets/menu_new/pizzas.jpg',
                 items: cat.items.filter(i => i.visible !== false),
                 isDynamic: true,
                 names: { es: cat.name_es, en: cat.name_en, fr: cat.name_fr }
