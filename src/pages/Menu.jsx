@@ -103,7 +103,7 @@ const CategoryCard = ({ category, items, index, cart, updateCart }) => {
                        <span className="text-sm font-black text-sierra-gold">{item.price.toFixed(2)}€</span>
                      </div>
                      {item.desc && (
-                        <p className="text-sm text-black font-medium mt-1 leading-relaxed italic opacity-90">
+                        <p className="text-sm text-black font-medium mt-1 leading-relaxed italic">
                           {item.desc}
                         </p>
                      )}
