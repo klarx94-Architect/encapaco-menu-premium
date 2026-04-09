@@ -41,6 +41,7 @@ export default function AdminPaco() {
   const [showAddItem, setShowAddItem] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [localPreviews, setLocalPreviews] = useState({}); // catId -> Array of BlobURLs
 
   // Deep clone helper to ensure React detects nested changes
   const updateMenuData = (newMenu) => {
@@ -135,6 +136,14 @@ export default function AdminPaco() {
   const handleCoverImageUpload = async (e, catId) => {
     const file = e.target.files[0];
     if (!file) return;
+    
+    // Immediate local preview
+    const previewUrl = URL.createObjectURL(file);
+    setLocalPreviews(prev => ({
+      ...prev,
+      [catId]: [...(prev[catId] || []), previewUrl]
+    }));
+
     setUploadingCover(catId);
     try {
       const base64 = await toBase64(file);
@@ -374,18 +383,28 @@ export default function AdminPaco() {
                   </button>
                 </div>
 
-                <div className="px-6 pt-4 pb-2">
-                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                    {(category.cover_images || []).map((img, idx) => (
-                      <div key={idx} className="relative shrink-0 group">
-                        <button onClick={() => setActiveCover(category.id, img)} className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${category.cover_image === img ? 'border-sierra-gold' : 'border-transparent opacity-60 hover:opacity-100'}`}>
-                          <img src={img} alt="" className="w-full h-full object-cover" />
-                        </button>
-                        <button onClick={() => handleDeleteCoverImage(category.id, idx)} className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
-                          <X size={10} />
-                        </button>
-                      </div>
-                    ))}
+                  <div className="px-6 pt-4 pb-2">
+                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                      {[...(category.cover_images || []), ...(localPreviews[category.id] || [])].map((img, idx) => (
+                        <div key={idx} className="relative shrink-0 group">
+                          <button onClick={() => setActiveCover(category.id, img)} className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${category.cover_image === img ? 'border-sierra-gold' : 'border-transparent opacity-60 hover:opacity-100'}`}>
+                            <img 
+                              src={img} 
+                              alt="" 
+                              className="w-full h-full object-cover" 
+                              onError={(e) => {
+                                // Simple retry for server URLs that are not yet ready
+                                if (!img.startsWith('blob:')) {
+                                  setTimeout(() => { e.target.src = img + '?t=' + Date.now(); }, 3000);
+                                }
+                              }}
+                            />
+                          </button>
+                          <button onClick={() => handleDeleteCoverImage(category.id, idx)} className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                            <X size={10} />
+                          </button>
+                        </div>
+                      ))}
                     <label className="shrink-0 w-14 h-14 rounded-xl border-2 border-dashed border-black/10 flex items-center justify-center cursor-pointer hover:border-sierra-gold/40 hover:bg-sierra-gold/5 transition-all">
                       {uploadingCover === category.id ? <Loader2 size={16} className="animate-spin text-sierra-gold" /> : <Plus size={16} className="text-black/20" />}
                       <input type="file" className="hidden" accept="image/*" onChange={(e) => handleCoverImageUpload(e, category.id)} />
