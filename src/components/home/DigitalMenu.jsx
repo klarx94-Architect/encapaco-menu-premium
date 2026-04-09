@@ -97,7 +97,8 @@ export default function DigitalMenu() {
   useEffect(() => {
     async function getMenu() {
       try {
-        const res = await fetch('/api/menu');
+        // Mandatory cache-busting for real-time data sync
+        const res = await fetch(`/api/menu?t=${Date.now()}`);
         if (!res.ok) throw new Error('API unstable');
         const data = await res.json();
         if (data && data.categories) {

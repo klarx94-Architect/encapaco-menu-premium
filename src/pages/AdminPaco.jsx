@@ -394,18 +394,23 @@ export default function AdminPaco() {
                       {[
                         ...(category.cover_images || []), 
                         ...(localPreviews[category.id] || [])
-                      ].filter((url, i, self) => self.indexOf(url) === i) // Deduplicate
+                      ]
+                      .filter((url, i, self) => self.indexOf(url) === i) // Deduplicate
                       .map((img, idx) => (
                         <div key={idx} className="relative shrink-0 group">
                           <button onClick={() => setActiveCover(category.id, img)} className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${category.cover_image === img ? 'border-sierra-gold' : 'border-transparent opacity-60 hover:opacity-100'}`}>
                             <img 
                               src={img} 
                               alt="" 
-                              className="w-full h-full object-cover" 
+                              className="w-full h-full object-cover transition-opacity duration-300" 
                               onError={(e) => {
-                                // Simple retry for server URLs that are not yet ready
+                                // Fallback and retry logic for high-latency server propagation
                                 if (!img.startsWith('blob:')) {
-                                  setTimeout(() => { e.target.src = img + '?t=' + Date.now(); }, 3000);
+                                  e.target.style.opacity = '0';
+                                  setTimeout(() => { 
+                                    e.target.src = img + (img.includes('?') ? '&' : '?') + 't=' + Date.now(); 
+                                    e.target.style.opacity = '1';
+                                  }, 4000);
                                 }
                               }}
                             />
