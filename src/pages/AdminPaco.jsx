@@ -161,6 +161,11 @@ export default function AdminPaco() {
         cat.cover_images = [...(cat.cover_images || []), data.url];
         cat.cover_image = data.url;
         updateMenuData(newData);
+        // Clear the specific preview once server confirms
+        setLocalPreviews(prev => ({
+          ...prev,
+          [catId]: (prev[catId] || []).filter(url => url !== previewUrl)
+        }));
       }
     } catch (err) {
       alert('Error subiendo imagen');
@@ -385,7 +390,11 @@ export default function AdminPaco() {
 
                   <div className="px-6 pt-4 pb-2">
                     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                      {[...(category.cover_images || []), ...(localPreviews[category.id] || [])].map((img, idx) => (
+                      {[
+                        ...(category.cover_images || []), 
+                        ...(localPreviews[category.id] || [])
+                      ].filter((url, i, self) => self.indexOf(url) === i) // Deduplicate
+                      .map((img, idx) => (
                         <div key={idx} className="relative shrink-0 group">
                           <button onClick={() => setActiveCover(category.id, img)} className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${category.cover_image === img ? 'border-sierra-gold' : 'border-transparent opacity-60 hover:opacity-100'}`}>
                             <img 
