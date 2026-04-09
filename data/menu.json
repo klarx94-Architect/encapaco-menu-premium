@@ -144,9 +144,10 @@
         }
       ],
       "visible": true,
-      "cover_image": "/assets/menu_new/bocadillos-2.jpg",
+      "cover_image": "/assets/menu/bocadillos-cover-1775695536900.jpg",
       "cover_images": [
-        "/assets/menu_new/bocadillos-2.jpg"
+        "/assets/menu_new/bocadillos-2.jpg",
+        "/assets/menu/bocadillos-cover-1775695536900.jpg"
       ]
     },
     {
