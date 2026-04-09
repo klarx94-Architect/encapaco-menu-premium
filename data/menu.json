@@ -23,7 +23,7 @@
           "name_fr": "Fromage affiné au four",
           "description_es": "Con tomate, orégano y pimentón dulce",
           "price": "5,50€",
-          "visible": false
+          "visible": true
         },
         {
           "id": "carne-salsa",
