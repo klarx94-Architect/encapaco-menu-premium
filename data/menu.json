@@ -11,8 +11,8 @@
           "name_es": "Alcachofas con anchoas",
           "name_en": "Artichokes with anchovies",
           "name_fr": "Artichauts aux anchois",
-          "description_es": "",
-          "price": "5.50",
+          "description_es": "Test",
+          "price": "7",
           "visible": true,
           "catId": "bocadillos"
         },
@@ -32,7 +32,7 @@
           "name_fr": "Viande en sauce",
           "description_es": "Receta de la abuela",
           "price": "5,00€",
-          "visible": true
+          "visible": false
         },
         {
           "id": "pollo-completo",
@@ -144,9 +144,11 @@
         }
       ],
       "visible": true,
-      "cover_image": "/assets/menu_new/bocadillos-2.jpg",
+      "cover_image": "/assets/menu/bocadillos-cover-1775727900147.jpg",
       "cover_images": [
-        "/assets/menu_new/bocadillos-2.jpg"
+        "/assets/menu_new/bocadillos-2.jpg",
+        "/assets/menu/bocadillos-cover-1775727890817.jpg",
+        "/assets/menu/bocadillos-cover-1775727900147.jpg"
       ]
     },
     {
