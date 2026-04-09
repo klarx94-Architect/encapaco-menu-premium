@@ -11,8 +11,8 @@
           "name_es": "Alcachofas con anchoas",
           "name_en": "Artichokes with anchovies",
           "name_fr": "Artichauts aux anchois",
-          "description_es": "Test",
-          "price": "7.90",
+          "description_es": "",
+          "price": "5.50",
           "visible": true,
           "catId": "bocadillos"
         },
@@ -23,7 +23,7 @@
           "name_fr": "Fromage affiné au four",
           "description_es": "Con tomate, orégano y pimentón dulce",
           "price": "5,50€",
-          "visible": false
+          "visible": true
         },
         {
           "id": "carne-salsa",
@@ -32,7 +32,7 @@
           "name_fr": "Viande en sauce",
           "description_es": "Receta de la abuela",
           "price": "5,00€",
-          "visible": false
+          "visible": true
         },
         {
           "id": "pollo-completo",
