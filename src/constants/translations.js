@@ -1,10 +1,10 @@
 export const translations = {
   es: {
     nav: {
-      home: "Inicio",
-      about: "Nosotros",
+      menu: "Menu",
+      nosotros: "Nosotros",
       playlist: "PLAYLIST ENCAPACO",
-      directions: "Cómo Llegar",
+      directions: "Llegar",
       call: "Llamar ahora"
     },
     hero: {
@@ -157,6 +157,7 @@ export const translations = {
       nav_title: "Navegación",
       tradition_title: "Tradición",
       legal_title: "Legal",
+      contact_title: "Contáctanos",
       tagline: "\"Donde la madera cruje al ritmo del jazz y el sabor de la sierra invita a quedarse.\"",
       reserved: "© 2026 ENCAPACO · PROYECTO SENIOR GASTRO",
       aviso: "Aviso Legal",
@@ -167,8 +168,8 @@ export const translations = {
   },
   en: {
     nav: {
-      home: "Home",
-      about: "About Us",
+      menu: "Menu",
+      nosotros: "About Us",
       playlist: "ENCAPACO PLAYLIST",
       directions: "Directions",
       call: "Call now"
@@ -323,6 +324,7 @@ export const translations = {
       nav_title: "Navigation",
       tradition_title: "Tradition",
       legal_title: "Legal",
+      contact_title: "Contact Us",
       tagline: "\"Where the wood creaks to the rhythm of jazz and the flavor of the sierra invites you to stay.\"",
       reserved: "© 2026 ENCAPACO · SENIOR GASTRO PROJECT",
       aviso: "Legal Notice",
@@ -333,8 +335,8 @@ export const translations = {
   },
   fr: {
     nav: {
-      home: "Accueil",
-      about: "À Propos",
+      menu: "Menu",
+      nosotros: "À Propos",
       playlist: "PLAYLIST ENCAPACO",
       directions: "Itinéraire",
       call: "Appeler maintenant"
@@ -489,6 +491,7 @@ export const translations = {
       nav_title: "Navigation",
       tradition_title: "Tradition",
       legal_title: "Juridique",
+      contact_title: "Contactez-nous",
       tagline: "\"Où le bois craque au rythme du jazz et la saveur de la sierra invite à rester.\"",
       reserved: "© 2026 ENCAPACO · PROJET SENIOR GASTRO",
       aviso: "Mentions Légales",

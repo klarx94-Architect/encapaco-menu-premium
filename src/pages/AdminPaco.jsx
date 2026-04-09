@@ -5,6 +5,7 @@ import {
   Save, Upload, CheckCircle2, ChevronRight, Image as ImageIcon,
   Loader2, AlertCircle, X, Trash2, Plus
 } from 'lucide-react';
+import LanguageSwitcher from '../components/ui/LanguageSwitcher';
 
 
 const ADMIN_STORAGE_KEY = 'encapaco_admin_auth';
@@ -103,8 +104,12 @@ export default function AdminPaco() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password, data: menuData })
       });
-      if (res.ok) alert('Carta maestros actualizada en el repositorio.');
-      else alert('Error al guardar.');
+      if (res.ok) {
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } else {
+        alert('Error al guardar.');
+      }
     } catch (err) {
       alert('Error crítico de conexión.');
     } finally {
@@ -118,7 +123,7 @@ export default function AdminPaco() {
     const newData = { ...menuData };
     const cat = newData.categories.find(c => c.id === catId);
     cat.cover_image = imageUrl;
-    setMenuData(newData);
+    updateMenuData(newData);
   };
 
   const handleCoverImageUpload = async (e, catId) => {
@@ -163,8 +168,8 @@ export default function AdminPaco() {
   const toggleCategoryVisibility = (catId) => {
     const newData = { ...menuData };
     const cat = newData.categories.find(c => c.id === catId);
-    cat.visible = cat.visible !== false;
-    setMenuData(newData);
+    cat.visible = cat.visible === false; // Flip logic
+    updateMenuData(newData);
   };
 
   // --- Item Handlers ---
@@ -173,8 +178,8 @@ export default function AdminPaco() {
     const newData = { ...menuData };
     const cat = newData.categories.find(c => c.id === catId);
     const item = cat.items.find(i => i.id === itemId);
-    item.visible = item.visible !== false;
-    setMenuData(newData);
+    item.visible = item.visible === false; // Flip logic
+    updateMenuData(newData);
   };
 
   const handleUpdateItem = (catId) => {
@@ -215,17 +220,74 @@ export default function AdminPaco() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-pearl-white flex items-center justify-center p-6">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-md w-full p-12 rounded-[3.5rem] bg-white border border-black/5 shadow-2xl relative overflow-hidden">
+      <div className="min-h-screen bg-pearl-white flex flex-col items-center justify-center p-4 sm:p-6 overflow-hidden relative">
+        {/* Background Architectural Detail */}
+        <div className="absolute top-0 right-0 p-10 opacity-[0.05] pointer-events-none hidden lg:block">
+           <span className="text-[15vw] font-serif font-black leading-none uppercase">PACO</span>
+        </div>
+
+        {/* Local Language Toggle for Admin */}
+        <div className="absolute top-8 right-8 z-50">
+          <LanguageSwitcher className="gap-4" />
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }} 
+          animate={{ opacity: 1, scale: 1 }} 
+          className="max-w-md w-full p-8 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] bg-white border border-black/5 shadow-2xl relative overflow-hidden z-10"
+        >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sierra-gold/30 to-transparent" />
-          <div className="w-20 h-20 bg-sierra-gold/10 rounded-full flex items-center justify-center mx-auto mb-10"><Package size={32} className="text-sierra-gold" /></div>
-          <h1 className="text-3xl font-serif font-black text-neutral-dark mb-4 text-center">Acceso Maestro</h1>
-          <p className="text-neutral-dark/40 text-center mb-10 font-serif italic text-sm leading-relaxed">"Para el director de orquesta. <br/>Introduce la contraseña para gestionar el refugio."</p>
+          
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-sierra-gold/10 rounded-full flex items-center justify-center mx-auto mb-8 sm:mb-10">
+            <Package size={32} className="text-sierra-gold" />
+          </div>
+
+          <h1 className="text-2xl sm:text-3xl font-serif font-black text-neutral-dark mb-4 text-center">Acceso Maestro</h1>
+          <p className="text-neutral-dark/40 text-center mb-8 sm:mb-10 font-serif italic text-sm leading-relaxed px-2">
+            "Para el director de orquesta. <br/>Introduce la contraseña para gestionar el refugio."
+          </p>
+
           <form onSubmit={handleLogin} className="space-y-6">
-            <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-6 py-4 rounded-2xl bg-pearl-white border border-black/5 focus:outline-none focus:ring-2 focus:ring-sierra-gold/20 font-sans" required />
-            <AnimatePresence>{authError && <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="flex items-center gap-2 text-terracotta-deep/80 text-xs font-bold uppercase tracking-wider px-2"><AlertCircle size={14} /><span>{authError}</span></motion.div>}</AnimatePresence>
-            <button type="submit" disabled={loading} className="w-full py-5 rounded-full bg-neutral-dark text-white font-black uppercase tracking-[0.3em] text-[10px] hover:bg-black transition-all shadow-xl disabled:opacity-50 flex items-center justify-center gap-4">{loading ? <Loader2 className="animate-spin" size={16} /> : 'Entrar al Panel'}</button>
+            <div className="relative">
+              <input 
+                type="password" 
+                placeholder="Contraseña" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                className="w-full px-6 py-4 rounded-2xl bg-pearl-white border border-black/5 focus:outline-none focus:ring-2 focus:ring-sierra-gold/20 font-sans tracking-widest text-center" 
+                required 
+              />
+            </div>
+
+            <AnimatePresence>
+              {authError && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }} 
+                  animate={{ opacity: 1, height: 'auto' }} 
+                  className="flex items-center justify-center gap-2 text-terracotta-deep/80 text-[10px] font-black uppercase tracking-widest px-2"
+                >
+                  <AlertCircle size={12} />
+                  <span>{authError}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <button 
+              type="submit" 
+              disabled={loading} 
+              className="w-full py-5 rounded-full bg-neutral-dark text-white font-black uppercase tracking-[0.3em] text-[10px] hover:bg-black transition-all shadow-xl disabled:opacity-50 flex items-center justify-center gap-4 group"
+            >
+              {loading ? (
+                <Loader2 className="animate-spin" size={16} />
+              ) : (
+                <>
+                  <span className="group-hover:translate-x-1 duration-300">Entrar al Panel</span>
+                  <ChevronRight size={14} />
+                </>
+              )}
+            </button>
           </form>
+          
           <p className="mt-12 text-center text-[10px] uppercase tracking-widest font-black text-neutral-dark/20">Protocolo Senior Gastro v2.0</p>
         </motion.div>
       </div>
@@ -234,22 +296,44 @@ export default function AdminPaco() {
 
   return (
     <div className="min-h-screen bg-pearl-white font-sans text-neutral-dark">
-      {/* Sidebar */}
-      <nav className="fixed left-0 top-0 h-full w-20 lg:w-72 bg-white border-r border-black/5 p-6 z-[600] flex flex-col justify-between">
-        <div className="space-y-12">
+      {/* Sidebar - Desktop: Sidenav, Mobile: Bottom Bar */}
+      <nav className="fixed bottom-0 left-0 w-full h-20 lg:h-full lg:w-72 bg-white border-t lg:border-t-0 lg:border-r border-black/5 p-4 lg:p-6 z-[600] flex flex-row lg:flex-col justify-between items-center lg:items-stretch">
+        <div className="flex flex-row lg:flex-col items-center lg:items-stretch gap-6 lg:gap-12 w-full lg:w-auto">
           <div className="flex items-center gap-4 px-2">
             <div className="w-10 h-10 bg-sierra-gold rounded-xl flex items-center justify-center shadow-lg"><Package size={20} className="text-white" /></div>
             <span className="hidden lg:block text-neutral-dark uppercase tracking-[0.2em] text-[11px] font-black">Encapaco Admin</span>
           </div>
-          <button className="w-full flex items-center gap-4 p-4 bg-neutral-dark text-white rounded-2xl shadow-lg">
+          <button className="flex-1 lg:flex-none flex items-center justify-center lg:justify-start gap-4 p-4 lg:p-4 bg-neutral-dark text-white rounded-2xl shadow-lg">
             <LayoutDashboard size={20} /><span className="hidden lg:block font-bold text-sm">Carta Maestro</span>
           </button>
         </div>
-        <button onClick={handleLogout} className="flex items-center gap-4 p-4 text-terracotta-deep hover:bg-terracotta-mid/5 w-full rounded-2xl transition-all"><LogOut size={20} /><span className="hidden lg:block font-bold text-sm">Cerrar Sesión</span></button>
+        <button onClick={handleLogout} className="flex items-center justify-center gap-4 p-4 text-terracotta-deep hover:bg-terracotta-mid/5 rounded-2xl transition-all">
+          <LogOut size={20} /><span className="hidden lg:block font-bold text-sm">Cerrar Sesión</span>
+        </button>
       </nav>
 
+      {/* Success Modal */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            exit={{ opacity: 0, y: 50 }} 
+            className="fixed bottom-24 lg:bottom-12 right-6 lg:right-12 z-[2000] bg-neutral-dark text-white px-8 py-5 rounded-3xl shadow-2xl border border-white/10 flex items-center gap-4 pointer-events-none"
+          >
+            <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+              <CheckCircle2 size={24} className="text-green-400" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">Sistema Persistente</p>
+              <p className="font-serif font-black text-sm">Carta actualizada en el repositorio</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main Content */}
-      <main className="pl-20 lg:pl-72 p-6 md:p-12 pb-32">
+      <main className="lg:pl-72 p-6 md:p-12 pb-32 mb-20 lg:mb-0">
         <header className="mb-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           <div>
             <h1 className="text-4xl md:text-5xl font-serif font-black mb-3">Carta Inteligente</h1>

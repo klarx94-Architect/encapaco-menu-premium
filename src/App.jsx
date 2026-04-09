@@ -13,6 +13,7 @@ import LegalNotice from './pages/LegalNotice';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import CookiesPolicy from './pages/CookiesPolicy';
 import Accessibility from './pages/Accessibility';
+import Llegar from './pages/Llegar';
 
 import { LanguageProvider } from './context/LanguageContext';
 
@@ -51,6 +52,7 @@ function App() {
               <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
               <Route path="/politica-de-cookies" element={<CookiesPolicy />} />
               <Route path="/accesibilidad" element={<Accessibility />} />
+              <Route path="/llegar" element={<Llegar />} />
             </Routes>
           </main>
 

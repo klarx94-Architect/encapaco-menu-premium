@@ -47,6 +47,7 @@ const Navbar = () => {
   const navLinks = [
     { name: t('nav.menu'), href: '/', icon: <User size={14} /> },
     { name: t('nav.nosotros'), href: '/nosotros', icon: <ShieldCheck size={14} /> },
+    { name: t('nav.directions'), href: '/llegar', icon: <MapPin size={14} /> },
     { 
       name: t('nav.playlist'),
       href: 'https://open.spotify.com/user/encapaco?si=t1PY-0vMRMKJW5ISArIJ7g',
@@ -55,9 +56,12 @@ const Navbar = () => {
     },
   ];
 
+  // Force-hide public Navbar on any administrative route to prevent UI collision
+  if (location.pathname.toLowerCase().includes('admin-paco')) return null;
+
   return (
     <>
-      <nav className={cn("fixed top-0 left-0 w-full z-[300] transition-all duration-500", 
+      <nav className={cn("fixed top-0 left-0 w-full transition-all duration-500 z-[1000]", 
         isScrolled 
           ? "bg-white/95 backdrop-blur-xl shadow-xl border-b border-black/5" 
           : "bg-transparent lg:py-8")}>
@@ -124,9 +128,14 @@ const Navbar = () => {
             {/* Derecha móvil: solo hamburger */}
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className="lg:hidden text-neutral-dark p-2 hover:scale-110 transition-transform relative z-[510]"
+              className={cn(
+                "lg:hidden p-3 rounded-full transition-all relative z-[800]",
+                isMobileOpen 
+                  ? "bg-neutral-dark text-white" 
+                  : "text-neutral-dark bg-white/40 backdrop-blur-md border border-black/5"
+              )}
             >
-              {isMobileOpen ? <X size={28} strokeWidth={2.5} /> : <Menu size={28} />}
+              {isMobileOpen ? <X size={24} strokeWidth={2.5} className="relative z-[810]" /> : <Menu size={24} />}
             </button>
 
           </div>
@@ -156,7 +165,7 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[400] bg-white pt-[140px] px-10"
+            className="fixed inset-0 z-[900] bg-white pt-[140px] px-10"
           >
             <div className="flex flex-col gap-8">
               {navLinks.map((link, idx) => (
