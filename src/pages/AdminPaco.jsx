@@ -62,7 +62,8 @@ export default function AdminPaco() {
   const fetchMenu = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/menu');
+      // Bypassing browser cache with a unique timestamp
+      const res = await fetch(`/api/menu?t=${Date.now()}`);
       const data = await res.json();
       setMenuData(data);
     } catch (err) {
