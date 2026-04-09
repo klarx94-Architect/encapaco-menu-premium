@@ -40,6 +40,12 @@ export default function AdminPaco() {
   const [editingItem, setEditingItem] = useState(null);
   const [showAddItem, setShowAddItem] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  // Deep clone helper to ensure React detects nested changes
+  const updateMenuData = (newMenu) => {
+    setMenuData(JSON.parse(JSON.stringify(newMenu)));
+  };
 
   // Auth Check
   useEffect(() => {
@@ -145,7 +151,7 @@ export default function AdminPaco() {
         const cat = newData.categories.find(c => c.id === catId);
         cat.cover_images = [...(cat.cover_images || []), data.url];
         cat.cover_image = data.url;
-        setMenuData(newData);
+        updateMenuData(newData);
       }
     } catch (err) {
       alert('Error subiendo imagen');
@@ -162,7 +168,7 @@ export default function AdminPaco() {
     if (cat.cover_image === deletedImg) {
       cat.cover_image = cat.cover_images[0] || '';
     }
-    setMenuData(newData);
+    updateMenuData(newData);
   };
 
   const toggleCategoryVisibility = (catId) => {
@@ -187,7 +193,7 @@ export default function AdminPaco() {
     const cat = newData.categories.find(c => c.id === catId);
     const idx = cat.items.findIndex(i => i.id === editingItem.id);
     cat.items[idx] = { ...editingItem };
-    setMenuData(newData);
+    updateMenuData(newData);
     setEditingItem(null);
   };
 
@@ -205,7 +211,7 @@ export default function AdminPaco() {
       visible: true,
     };
     cat.items.push(newItem);
-    setMenuData(newData);
+    updateMenuData(newData);
     setEditingItem(null);
     setShowAddItem(false);
   };
@@ -215,7 +221,7 @@ export default function AdminPaco() {
     const newData = { ...menuData };
     const cat = newData.categories.find(c => c.id === catId);
     cat.items = cat.items.filter(i => i.id !== itemId);
-    setMenuData(newData);
+    updateMenuData(newData);
   };
 
   if (!isAuthenticated) {
