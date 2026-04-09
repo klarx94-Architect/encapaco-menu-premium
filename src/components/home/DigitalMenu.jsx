@@ -4,6 +4,7 @@ import { ChevronDown, Phone, Utensils, MapPin, Navigation, Music, ArrowRight } f
 import { Link } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { useLanguage } from '../../context/LanguageContext';
+import CategoryCarousel from '../ui/CategoryCarousel';
 
 const MENU_DATA = {
   'Bocadillos': {
@@ -105,6 +106,7 @@ export default function DigitalMenu() {
             if (cat.visible !== false) {
               normalized[cat.name_es] = {
                 image: cat.cover_image || MENU_DATA[cat.name_es]?.image || '/assets/menu_new/pizzas.jpg',
+                images: cat.cover_images || [cat.cover_image || MENU_DATA[cat.name_es]?.image || '/assets/menu_new/pizzas.jpg'],
                 items: cat.items.filter(i => i.visible !== false),
                 isDynamic: true,
                 names: { es: cat.name_es, en: cat.name_en, fr: cat.name_fr }
@@ -209,13 +211,12 @@ export default function DigitalMenu() {
                       <div className="w-16 h-1.5 bg-terracotta-mid group-hover/cat:w-32 transition-all duration-1000 ease-out shadow-lg" />
                     </motion.div>
                   </div>
-                  <div className="w-full md:w-[55%] h-[250px] md:h-full relative overflow-hidden z-10">
-                    <img 
-                      src={data.image} 
-                      alt={category} 
-                      className="w-full h-full object-cover transition-transform duration-[2s] group-hover/cat:scale-110"
+                  <div className="w-full md:w-[55%] h-[250px] md:h-full relative overflow-hidden z-10 transition-transform duration-[2s] group-hover/cat:scale-110">
+                    <CategoryCarousel 
+                      images={data.images || [data.image]} 
+                      categoryName={category} 
                     />
-                    <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-neutral-dark to-transparent hidden md:block" />
+                    <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-neutral-dark to-transparent hidden md:block z-20" />
                   </div>
                 </div>
 
