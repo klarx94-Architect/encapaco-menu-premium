@@ -1,12 +1,8 @@
-import { db, storage } from './firebase';
+import { db } from './firebase';
 import {
   doc, getDoc, setDoc, onSnapshot
 } from 'firebase/firestore';
-import {
-  ref, uploadBytes, getDownloadURL
-} from 'firebase/storage';
 
-const MENU_DOC = 'menu/carta';
 const ADMIN_PASSWORD = 'PacoDirector-2026-Sierra';
 
 // --- AUTH ---
@@ -37,12 +33,32 @@ export async function saveMenu(menuData) {
   await setDoc(doc(db, 'menu', 'carta'), menuData);
 }
 
-// --- SUBIR IMAGEN A FIREBASE STORAGE ---
+// --- SUBIR IMAGEN via /api/upload (GitHub repo → Vercel CDN) ---
 export async function uploadCoverImage(catId, file) {
-  const ext = file.name.split('.').pop() || 'jpg';
-  const filename = `covers/${catId}-${Date.now()}.${ext}`;
-  const storageRef = ref(storage, filename);
-  await uploadBytes(storageRef, file);
-  const url = await getDownloadURL(storageRef);
-  return url;
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const base64 = reader.result.split(',')[1];
+        const ext = file.name.split('.').pop().toLowerCase() || 'jpg';
+        const filename = `${catId}-${Date.now()}.${ext}`;
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            password: ADMIN_PASSWORD,
+            filename,
+            base64
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error subiendo imagen');
+        resolve(data.url);
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = () => reject(new Error('Error leyendo el archivo'));
+    reader.readAsDataURL(file);
+  });
 }
