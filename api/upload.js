@@ -69,8 +69,8 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: err.message || 'Error en GitHub API' });
     }
 
-    // 5. Devolver la URL pública de la imagen en producción
-    const publicUrl = `/assets/menu/${safeName}`;
+    // 5. Devolver URL raw de GitHub — disponible al instante sin esperar redeploy de Vercel
+    const publicUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${filePath}`;
     return res.status(200).json({ url: publicUrl, committed: true });
 
   } catch (err) {
