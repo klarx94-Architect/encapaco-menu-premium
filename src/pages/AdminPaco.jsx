@@ -338,7 +338,7 @@ export default function AdminPaco() {
                 <div className="px-6 pt-4 pb-2">
                   <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                     {(category.cover_images || []).map((img, idx) => (
-                      <div key={idx} className="relative shrink-0 group">
+                      <div key={idx} className="relative shrink-0">
                         <button
                           onClick={() => setActiveCover(category.id, img)}
                           className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${
@@ -349,7 +349,8 @@ export default function AdminPaco() {
                         </button>
                         <button
                           onClick={() => handleDeleteCoverImage(category.id, idx)}
-                          className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+                          className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center shadow-md"
+                          aria-label="Eliminar imagen"
                         >
                           <X size={10} />
                         </button>
