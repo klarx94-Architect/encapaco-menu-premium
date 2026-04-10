@@ -62,7 +62,6 @@ export default function AdminPaco() {
   const fetchMenu = async () => {
     setLoading(true);
     try {
-      // Bypassing browser cache with a unique timestamp
       const res = await fetch(`/api/menu?t=${Date.now()}`);
       const data = await res.json();
       setMenuData(data);
@@ -125,8 +124,6 @@ export default function AdminPaco() {
     }
   };
 
-  // --- Category Handlers ---
-
   const setActiveCover = (catId, imageUrl) => {
     const newData = { ...menuData };
     const cat = newData.categories.find(c => c.id === catId);
@@ -137,14 +134,11 @@ export default function AdminPaco() {
   const handleCoverImageUpload = async (e, catId) => {
     const file = e.target.files[0];
     if (!file) return;
-    
-    // Immediate local preview
     const previewUrl = URL.createObjectURL(file);
     setLocalPreviews(prev => ({
       ...prev,
       [catId]: [...(prev[catId] || []), previewUrl]
     }));
-
     setUploadingCover(catId);
     try {
       const base64 = await toBase64(file);
@@ -162,7 +156,6 @@ export default function AdminPaco() {
         cat.cover_images = [...(cat.cover_images || []), data.url];
         cat.cover_image = data.url;
         updateMenuData(newData);
-        // Clear the specific preview once server confirms
         setLocalPreviews(prev => ({
           ...prev,
           [catId]: (prev[catId] || []).filter(url => url !== previewUrl)
@@ -189,17 +182,15 @@ export default function AdminPaco() {
   const toggleCategoryVisibility = (catId) => {
     const newData = { ...menuData };
     const cat = newData.categories.find(c => c.id === catId);
-    cat.visible = cat.visible === false; // Flip logic
+    cat.visible = cat.visible === false;
     updateMenuData(newData);
   };
-
-  // --- Item Handlers ---
 
   const toggleItemVisibility = (catId, itemId) => {
     const newData = { ...menuData };
     const cat = newData.categories.find(c => c.id === catId);
     const item = cat.items.find(i => i.id === itemId);
-    item.visible = item.visible === false; // Flip logic
+    item.visible = item.visible === false;
     updateMenuData(newData);
   };
 
@@ -242,32 +233,25 @@ export default function AdminPaco() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-pearl-white flex flex-col items-center justify-center p-4 sm:p-6 overflow-hidden relative">
-        {/* Background Architectural Detail */}
         <div className="absolute top-0 right-0 p-10 opacity-[0.05] pointer-events-none hidden lg:block">
            <span className="text-[15vw] font-serif font-black leading-none uppercase">PACO</span>
         </div>
-
-        {/* Local Language Toggle for Admin */}
         <div className="absolute top-8 right-8 z-50">
           <LanguageSwitcher className="gap-4" />
         </div>
-
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }} 
           animate={{ opacity: 1, scale: 1 }} 
           className="max-w-md w-full p-8 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] bg-white border border-black/5 shadow-2xl relative overflow-hidden z-10"
         >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sierra-gold/30 to-transparent" />
-          
           <div className="w-16 h-16 sm:w-20 sm:h-20 bg-sierra-gold/10 rounded-full flex items-center justify-center mx-auto mb-8 sm:mb-10">
             <Package size={32} className="text-sierra-gold" />
           </div>
-
           <h1 className="text-2xl sm:text-3xl font-serif font-black text-neutral-dark mb-4 text-center">Acceso Maestro</h1>
           <p className="text-neutral-dark/40 text-center mb-8 sm:mb-10 font-serif italic text-sm leading-relaxed px-2">
             "Para el director de orquesta. <br/>Introduce la contraseña para gestionar el refugio."
           </p>
-
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="relative">
               <input 
@@ -279,7 +263,6 @@ export default function AdminPaco() {
                 required 
               />
             </div>
-
             <AnimatePresence>
               {authError && (
                 <motion.div 
@@ -292,7 +275,6 @@ export default function AdminPaco() {
                 </motion.div>
               )}
             </AnimatePresence>
-
             <button 
               type="submit" 
               disabled={loading} 
@@ -308,7 +290,6 @@ export default function AdminPaco() {
               )}
             </button>
           </form>
-          
           <p className="mt-12 text-center text-[10px] uppercase tracking-widest font-black text-neutral-dark/20">Protocolo Senior Gastro v2.0</p>
         </motion.div>
       </div>
@@ -317,7 +298,6 @@ export default function AdminPaco() {
 
   return (
     <div className="min-h-screen bg-pearl-white font-sans text-neutral-dark">
-      {/* Sidebar - Desktop: Sidenav, Mobile: Bottom Bar */}
       <nav className="fixed bottom-0 left-0 w-full h-20 lg:h-full lg:w-72 bg-white border-t lg:border-t-0 lg:border-r border-black/5 p-4 lg:p-6 z-[600] flex flex-row lg:flex-col justify-between items-center lg:items-stretch">
         <div className="flex flex-row lg:flex-col items-center lg:items-stretch gap-6 lg:gap-12 w-full lg:w-auto">
           <div className="flex items-center gap-4 px-2">
@@ -333,7 +313,6 @@ export default function AdminPaco() {
         </button>
       </nav>
 
-      {/* Success Modal */}
       <AnimatePresence>
         {showSuccess && (
           <motion.div 
@@ -353,7 +332,6 @@ export default function AdminPaco() {
         )}
       </AnimatePresence>
 
-      {/* Main Content */}
       <main className="lg:pl-72 p-6 md:p-12 pb-32 mb-20 lg:mb-0">
         <header className="mb-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           <div>
@@ -372,7 +350,7 @@ export default function AdminPaco() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {menuData?.categories.map(category => (
+            {menuData?.categories?.map(category => (
               <motion.div key={category.id} className="bg-white rounded-[2.5rem] border border-black/5 shadow-sm overflow-hidden flex flex-col">
                 <div className="relative h-40 bg-neutral-dark overflow-hidden">
                   {category.cover_image ? (
@@ -388,45 +366,42 @@ export default function AdminPaco() {
                     {category.visible !== false ? '● Visible' : '○ Oculta'}
                   </button>
                 </div>
-
-                  <div className="px-6 pt-4 pb-2">
-                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                      {[
-                        ...(category.cover_images || []), 
-                        ...(localPreviews[category.id] || [])
-                      ]
-                      .filter((url, i, self) => self.indexOf(url) === i) // Deduplicate
-                      .map((img, idx) => (
-                        <div key={idx} className="relative shrink-0 group">
-                          <button onClick={() => setActiveCover(category.id, img)} className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${category.cover_image === img ? 'border-sierra-gold' : 'border-transparent opacity-60 hover:opacity-100'}`}>
-                            <img 
-                              src={img} 
-                              alt="" 
-                              className="w-full h-full object-cover transition-opacity duration-300" 
-                              onError={(e) => {
-                                // Fallback and retry logic for high-latency server propagation
-                                if (!img.startsWith('blob:')) {
-                                  e.target.style.opacity = '0';
-                                  setTimeout(() => { 
-                                    e.target.src = img + (img.includes('?') ? '&' : '?') + 't=' + Date.now(); 
-                                    e.target.style.opacity = '1';
-                                  }, 4000);
-                                }
-                              }}
-                            />
-                          </button>
-                          <button onClick={() => handleDeleteCoverImage(category.id, idx)} className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
-                            <X size={10} />
-                          </button>
-                        </div>
-                      ))}
+                <div className="px-6 pt-4 pb-2">
+                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                    {[
+                      ...(category.cover_images || []), 
+                      ...(localPreviews[category.id] || [])
+                    ]
+                    .filter((url, i, self) => self.indexOf(url) === i)
+                    .map((img, idx) => (
+                      <div key={idx} className="relative shrink-0 group">
+                        <button onClick={() => setActiveCover(category.id, img)} className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${category.cover_image === img ? 'border-sierra-gold' : 'border-transparent opacity-60 hover:opacity-100'}`}>
+                          <img 
+                            src={img} 
+                            alt="" 
+                            className="w-full h-full object-cover transition-opacity duration-300" 
+                            onError={(e) => {
+                              if (!img.startsWith('blob:')) {
+                                e.target.style.opacity = '0';
+                                setTimeout(() => { 
+                                  e.target.src = img + (img.includes('?') ? '&' : '?') + 't=' + Date.now(); 
+                                  e.target.style.opacity = '1';
+                                }, 4000);
+                              }
+                            }}
+                          />
+                        </button>
+                        <button onClick={() => handleDeleteCoverImage(category.id, idx)} className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                          <X size={10} />
+                        </button>
+                      </div>
+                    ))}
                     <label className="shrink-0 w-14 h-14 rounded-xl border-2 border-dashed border-black/10 flex items-center justify-center cursor-pointer hover:border-sierra-gold/40 hover:bg-sierra-gold/5 transition-all">
                       {uploadingCover === category.id ? <Loader2 size={16} className="animate-spin text-sierra-gold" /> : <Plus size={16} className="text-black/20" />}
                       <input type="file" className="hidden" accept="image/*" onChange={(e) => handleCoverImageUpload(e, category.id)} />
                     </label>
                   </div>
                 </div>
-
                 <div className="px-6 pb-6 mt-auto flex items-center justify-between">
                   <span className="text-[10px] font-black uppercase tracking-widest text-neutral-dark/30">{category.items?.length || 0} platos</span>
                   <button onClick={() => setExpandedCategory(category.id)} className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-sierra-gold hover:text-neutral-dark transition-colors">
@@ -439,10 +414,10 @@ export default function AdminPaco() {
         )}
       </main>
 
-      {/* Expanded Modal (Items) */}
       <AnimatePresence>
         {expandedCategory && (() => {
-          const cat = menuData.categories.find(c => c.id === expandedCategory);
+          const cat = menuData?.categories?.find(c => c.id === expandedCategory);
+          if (!cat) return null;
           return (
             <div className="fixed inset-0 z-[1000] flex items-end sm:items-center justify-center p-0 sm:p-6">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { setExpandedCategory(null); setEditingItem(null); setShowAddItem(false); }} className="absolute inset-0 bg-neutral-dark/60 backdrop-blur-xl" />
@@ -450,11 +425,10 @@ export default function AdminPaco() {
                 <div className="p-8 border-b border-black/5 flex items-center justify-between shrink-0">
                   <div><p className="text-[9px] font-black uppercase tracking-[0.3em] text-sierra-gold mb-1">Categoría</p><h2 className="text-2xl font-serif font-black">{cat.name_es}</h2></div>
                   <div className="flex items-center gap-3">
-                    <button onClick={() => setShowAddItem(true)} className="flex items-center gap-2 px-5 py-3 bg-sierra-gold text-neutral-dark rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all"><Plus size={14} />Añadir plato</button>
+                    <button onClick={() => setShowAddItem(true)} className="flex items-center gap-2 px-5 py-3 bg-sierra-gold text-neutral-dark rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg hover:scale-105 transition-all"><Plus size={14} />Áñadir plato</button>
                     <button onClick={() => { setExpandedCategory(null); setEditingItem(null); setShowAddItem(false); }} className="text-neutral-dark/20 hover:text-neutral-dark p-2 transition-colors"><X size={24} /></button>
                   </div>
                 </div>
-
                 <div className="overflow-y-auto flex-1 p-6 space-y-3">
                   {showAddItem && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="bg-sierra-gold/5 border border-sierra-gold/20 rounded-3xl p-6 space-y-4 overflow-hidden">
@@ -470,8 +444,7 @@ export default function AdminPaco() {
                       </div>
                     </motion.div>
                   )}
-
-                  {cat.items.map((item) => (
+                  {cat.items?.map((item) => (
                     <div key={item.id} className={`flex items-center gap-4 p-4 rounded-2xl border transition-all ${item.visible === false ? 'border-dashed border-black/5 bg-black/[0.02] opacity-60' : 'border-black/5 bg-white'}`}>
                       <div className="flex-1 min-w-0">
                         {editingItem?.id === item.id && editingItem?.catId === cat.id ? (
