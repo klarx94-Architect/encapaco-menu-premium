@@ -88,6 +88,9 @@ const TE_DATA = [
   { name: 'Limón y jengibre', price: '1,80€' },
 ];
 
+// Claves que corresponden a la categoría Tés e Infusiones — excluidas del grid principal
+const TEA_CATEGORY_KEYS = ['tes', 'Tés e Infusiones', 'Tés', 'Tes e Infusiones', 'Tés e infusiones'];
+
 export default function DigitalMenu() {
   const { t, language } = useLanguage();
   const [isTeOpen, setIsTeOpen] = useState(false);
@@ -191,7 +194,8 @@ export default function DigitalMenu() {
         {/* Categories Grid */}
         <div className="space-y-32 md:space-y-40">
           {Object.entries(displayData).map(([category, data], idx) => {
-            if (category === 'tes') return null;
+            // Excluir la categoría de tés del grid principal (se muestra en su propia sección desplegable)
+            if (TEA_CATEGORY_KEYS.includes(category)) return null;
             const categoryTitle = data.isDynamic ? data.names[language] : t(`menu.categories.${category}`);
             
             return (
