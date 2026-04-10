@@ -41,7 +41,7 @@ const MENU_ITEMS = [
   { id: 24, cat: 'Raciones', name: 'Rosca serrana', price: 12.00, desc: 'Embutidos ibéricos y aceite de oliva.' },
   { id: 25, cat: 'Raciones', name: 'Pincho moruno', price: 7.50, desc: 'Marinado andaluz a la brasa.' },
 
-  // Bebidas
+  // Bebidas Calientes (datos para el carrito, no se renderizan como categoría visible)
   { id: 26, cat: 'Bebidas Calientes', name: 'Té negro con canela', price: 1.80, desc: 'Té negro' },
   { id: 27, cat: 'Bebidas Calientes', name: 'Té negro pakistaní', price: 1.80, desc: 'Té negro' },
   { id: 28, cat: 'Bebidas Calientes', name: 'Té verde china Gunpowder', price: 1.80, desc: 'Té verde' },
@@ -65,7 +65,7 @@ const CAT_IMAGES = {
   'Sandwiches': '/assets/comida/sandwiches2.jpg',
   'Pizzas': '/assets/bar_tapas/pizzas-2814417.jpg',
   'Raciones': '/assets/bar_tapas/img-3468.jpg',
-  'Bebidas Calientes': '/assets/nosotros/img-4389.jpg' // Replaced tortilla with a different interior/lounge image likely showing coffee/tea cups
+  'Bebidas Calientes': '/assets/nosotros/img-4389.jpg'
 };
 
 const CategoryCard = ({ category, items, index, cart, updateCart }) => {
@@ -205,9 +205,9 @@ export default function Menu({ onReserve }) {
          </button>
       </div>
 
-      {/* Menu Categories List */}
+      {/* Menu Categories List — Bebidas Calientes excluida (se muestra en sección desplegable propia) */}
       <div className="w-full max-w-[1200px] px-4 md:px-8 space-y-10 md:space-y-16">
-        {['Hamburguesas', 'Bocadillos', 'Sandwiches', 'Pizzas', 'Raciones', 'Bebidas Calientes'].map((category, idx) => {
+        {['Hamburguesas', 'Bocadillos', 'Sandwiches', 'Pizzas', 'Raciones'].map((category, idx) => {
           const items = MENU_ITEMS.filter(item => item.cat === category);
           if (items.length === 0) return null;
           

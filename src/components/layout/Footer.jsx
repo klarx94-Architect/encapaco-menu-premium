@@ -1,4 +1,4 @@
-import { Instagram, Share2, MapPin, Phone, Mail, Music } from 'lucide-react';
+import { Facebook, Share2, MapPin, Phone, Mail, Music } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -24,7 +24,15 @@ export default function Footer() {
                {t('footer.tagline')}
             </p>
             <div className="flex gap-6 items-center">
-               <a href="#" className="text-pearl-white/40 hover:text-sierra-gold transition-colors"><Instagram size={20} /></a>
+               <a
+                 href="https://www.facebook.com/profile.php?id=100041610806468"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 aria-label="Facebook de ENCAPACO"
+                 className="text-pearl-white/40 hover:text-sierra-gold transition-colors"
+               >
+                 <Facebook size={20} />
+               </a>
                <a href="#" className="text-pearl-white/40 hover:text-sierra-gold transition-colors"><Share2 size={20} /></a>
             </div>
           </div>
@@ -33,8 +41,12 @@ export default function Footer() {
           <div>
             <h4 className="text-[10px] font-black uppercase tracking-[0.6em] text-sierra-gold mb-10">{t('footer.nav_title')}</h4>
             <ul className="space-y-6 text-sm font-bold uppercase tracking-widest text-pearl-white/60">
-              <li><Link to="/" className="hover:text-pearl-white transition-colors no-underline">{t('nav.home')}</Link></li>
-              <li><Link to="/nosotros" className="hover:text-pearl-white transition-colors no-underline">{t('nav.about')}</Link></li>
+              <li>
+                <a href="/#" className="hover:text-pearl-white transition-colors no-underline">Inicio</a>
+              </li>
+              <li>
+                <Link to="/nosotros" className="hover:text-pearl-white transition-colors no-underline">Nosotros</Link>
+              </li>
               <li>
                 <a 
                   href="https://open.spotify.com/user/encapaco?si=t1PY-0vMRMKJW5ISArIJ7g" 
