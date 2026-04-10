@@ -17,7 +17,7 @@
     "vite": "^6.3.3"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.4",
+    "firebase": "^10.14.1",
     "@tailwindcss/vite": "^4.2.2",
     "autoprefixer": "^10.4.21",
     "clsx": "^2.1.1",
